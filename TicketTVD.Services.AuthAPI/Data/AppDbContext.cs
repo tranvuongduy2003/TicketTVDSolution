@@ -11,17 +11,42 @@ public class AppDbContext : IdentityDbContext<ApplicationUser>
     }
 
     public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+    
+    public override Task<int> SaveChangesAsync(
+        bool acceptAllChangesOnSuccess,
+        CancellationToken cancellationToken = default(CancellationToken))
+    {
+        var AddedEntities = ChangeTracker.Entries()
+            .Where(E => E.State == EntityState.Added)
+            .ToList();
+
+        AddedEntities.ForEach(E =>
+        {
+            E.Property("CreatedAt").CurrentValue = DateTime.Now;
+        });
+
+        var EditedEntities = ChangeTracker.Entries()
+            .Where(E => E.State == EntityState.Modified)
+            .ToList();
+
+        EditedEntities.ForEach(E =>
+        {
+            E.Property("UpdatedAt").CurrentValue = DateTime.Now;
+        });
+
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
         modelBuilder.Entity<ApplicationUser>()
-            .Property(e => e.CreatedAt)
+            .Property(b => b.CreatedAt )
             .HasDefaultValueSql("getdate()");
-
+        
         modelBuilder.Entity<ApplicationUser>()
-            .Property(e => e.UpdatedAt)
+            .Property(b => b.CreatedAt )
             .HasDefaultValueSql("getdate()");
     }
 }

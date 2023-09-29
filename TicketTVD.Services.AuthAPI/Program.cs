@@ -13,19 +13,18 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 });
 
 
+// Add JWT Configs
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
+
 // Link ApplicationUser with System Roles
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
-
-// Add JWT Configs
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("ApiSettings:JwtOptions"));
 
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -46,6 +45,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 ApplyMigration();
+app.Run();
 
 void ApplyMigration()
 {

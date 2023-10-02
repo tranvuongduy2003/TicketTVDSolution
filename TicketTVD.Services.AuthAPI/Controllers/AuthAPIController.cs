@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using TicketTVD.Services.AuthAPI.Models.Dto;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 
@@ -23,12 +24,19 @@ namespace TicketTVD.Services.AuthAPI.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegistrationRequestDto model)
         {
-            var errorMessage = await _authService.Register(model);
-            if (!string.IsNullOrEmpty(errorMessage))
+            try
             {
-                _response.IsSuccess = false;
-                _response.Message = errorMessage;
-                return BadRequest(_response);
+                var errorMessage = await _authService.Register(model);
+                if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = errorMessage;
+                    return BadRequest(_response);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
             }
 
             return Ok(_response);
@@ -37,27 +45,76 @@ namespace TicketTVD.Services.AuthAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto model)
         {
-            var loginResponse = await _authService.Login(model);
-            if (loginResponse.User == null)
+            try
             {
-                _response.IsSuccess = false;
-                _response.Message = "Username or password is incorrect";
-                return BadRequest(_response);
+                var loginResponse = await _authService.Login(model);
+                if (loginResponse.User == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Tài khoản hoặc mật khẩu không đúng";
+                    return Unauthorized(_response);
+                }
+
+                _response.Data = loginResponse;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
             }
 
-            _response.Result = loginResponse;
             return Ok(_response);
         }
 
         [HttpPost("assign-role")]
         public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDto model)
         {
-            var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.Role.ToUpper());
-            if (!assignRoleSuccessful)
+            try
             {
-                _response.IsSuccess = false;
-                _response.Message = "Error encountered";
-                return BadRequest(_response);
+                var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.Role.ToUpper());
+                if (!assignRoleSuccessful)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Something went wrong";
+                    return BadRequest(_response);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+            }
+
+            return Ok(_response);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto tokenRequestDto)
+        {
+            try
+            {
+                var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                if (tokenRequestDto is null || tokenRequestDto.RefreshToken is null || tokenRequestDto.RefreshToken == "" ||
+                    accessToken is null || accessToken == "")
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Invalid client request";
+                    return BadRequest(_response);
+                }
+
+
+                var newAccessToken = await _authService.RefreshToken(accessToken, tokenRequestDto.RefreshToken);
+
+                if (newAccessToken == "" || newAccessToken is null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Invalid access token or refresh token";
+                    return BadRequest(_response);
+                }
+
+                _response.Data = newAccessToken;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
             }
 
             return Ok(_response);

@@ -11,6 +11,6 @@ public class UserDto
     public string? Avatar { get; set; }
     public string Status { get; set; }
     public string Role { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 }

@@ -1,0 +1,102 @@
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using Microsoft.AspNetCore.Connections;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using TicketTVD.Services.AuthAPI.Models;
+using TicketTVD.Services.AuthAPI.Services.IServices;
+
+namespace TicketTVD.Services.AuthAPI.Services;
+
+public class TokenService : ITokenService
+{
+    private readonly JwtOptions _jwtOptions;
+
+    public TokenService(IOptions<JwtOptions> jwtOptions)
+    {
+        _jwtOptions = jwtOptions.Value;
+    }
+
+    public string GenerateAccessToken(ApplicationUser applicationUser, IEnumerable<string> roles)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+
+        var claimList = new List<Claim>
+        {
+            new Claim(ClaimTypes.Email, applicationUser.Email),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        };
+
+        claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        
+        var token = new JwtSecurityToken(
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
+            claims: claimList,
+            expires: DateTime.Now.AddMinutes(5),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256Signature)
+        );
+
+        return tokenHandler.WriteToken(token);
+    }
+
+    public string GenerateRefreshToken()
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+
+        var token = new JwtSecurityToken(
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
+            expires: DateTime.Now.AddMinutes(5),
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key),
+                SecurityAlgorithms.HmacSha256Signature)
+        );
+        
+        return tokenHandler.WriteToken(token);
+    }
+
+    public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
+    {
+        var key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
+
+        var tokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateLifetime = false
+        };
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+
+        var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+        if (securityToken is not JwtSecurityToken jwtSecurityToken ||
+            !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256Signature,
+                StringComparison.InvariantCultureIgnoreCase))
+            throw new SecurityTokenException("Invalid token");
+
+        return principal;
+    }
+
+    public bool ValidateTokenExpire(string token)
+    {
+        if (token is null || token == "") return false;
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var jwtToken = tokenHandler.ReadToken(token);
+
+        if (jwtToken is null) return false;
+
+        return jwtToken.ValidTo > DateTime.Now;
+    }
+}

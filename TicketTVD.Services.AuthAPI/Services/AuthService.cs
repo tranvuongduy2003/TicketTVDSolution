@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.JsonWebTokens;
 using TicketTVD.Services.AuthAPI.Data;
 using TicketTVD.Services.AuthAPI.Models;
 using TicketTVD.Services.AuthAPI.Models.Dto;
@@ -9,15 +11,15 @@ namespace TicketTVD.Services.AuthAPI.Services;
 public class AuthService : IAuthService
 {
     private readonly AppDbContext _db;
-    private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly ITokenService _tokenService;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
 
-    public AuthService(AppDbContext db, IJwtTokenGenerator jwtTokenGenerator,
+    public AuthService(AppDbContext db, ITokenService tokenService,
         UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
     {
         _db = db;
-        _jwtTokenGenerator = jwtTokenGenerator;
+        _tokenService = tokenService;
         _userManager = userManager;
         _roleManager = roleManager;
     }
@@ -30,7 +32,7 @@ public class AuthService : IAuthService
             Email = registrationRequestDto.Email,
             NormalizedEmail = registrationRequestDto.Email.ToUpper(),
             Name = registrationRequestDto.Name,
-            PhoneNumber = registrationRequestDto.PhoneNumber
+            PhoneNumber = registrationRequestDto.PhoneNumber,
         };
 
         try
@@ -40,6 +42,13 @@ public class AuthService : IAuthService
             {
                 var userToReturn = _db.ApplicationUsers.First(u => u.UserName == registrationRequestDto.Email);
 
+                if (!_roleManager.RoleExistsAsync(registrationRequestDto.Role).GetAwaiter().GetResult())
+                {
+                    _roleManager.CreateAsync(new IdentityRole(registrationRequestDto.Role)).GetAwaiter().GetResult();
+                }
+
+                await _userManager.AddToRoleAsync(user, registrationRequestDto.Role);
+                
                 UserDto userDto = new()
                 {
                     Email = userToReturn.Email,
@@ -57,9 +66,8 @@ public class AuthService : IAuthService
         }
         catch (Exception ex)
         {
+            return ex.Message.ToString();
         }
-
-        return "Error Encountered";
     }
 
     public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
@@ -71,25 +79,34 @@ public class AuthService : IAuthService
 
         if (user == null || isValid == false)
         {
-            return new LoginResponseDto() { User = null, Token = "" };
+            return new LoginResponseDto() { User = null, RefreshToken = null, AccessToken = null };
         }
 
         //if user was found , Generate JWT Token
         var roles = await _userManager.GetRolesAsync(user);
-        var token = _jwtTokenGenerator.GenerateToken(user, roles);
+        var accessToken = _tokenService.GenerateAccessToken(user, roles);
+        var refreshToken = _tokenService.GenerateRefreshToken();
+
+        user.RefreshToken = refreshToken;
+        _db.SaveChanges();
 
         UserDto userDTO = new()
         {
-            Email = user.Email,
             ID = user.Id,
+            Email = user.Email,
             Name = user.Name,
-            PhoneNumber = user.PhoneNumber
+            PhoneNumber = user.PhoneNumber,
+            Status = user.Status,
+            Role = roles.FirstOrDefault(u => true), // Every users has only 1 their own role
+            CreatedAt = user.CreatedAt,
+            UpdatedAt = user.UpdatedAt,
         };
 
         LoginResponseDto loginResponseDto = new LoginResponseDto()
         {
             User = userDTO,
-            Token = token
+            AccessToken = accessToken,
+            RefreshToken = refreshToken
         };
 
         return loginResponseDto;
@@ -111,5 +128,21 @@ public class AuthService : IAuthService
         }
 
         return false;
+    }
+
+    public async Task<string> RefreshToken(string accessToken, string refreshToken)
+    {
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+        if (principal == null) return "";
+        
+        var userEmail = principal.Claims.FirstOrDefault(c =>  c.Type == ClaimTypes.Email).Value;
+        var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
+        if (user is null || user.RefreshToken != refreshToken ||  _tokenService.ValidateTokenExpire(refreshToken))
+            return "";
+        
+        var roles = await _userManager.GetRolesAsync(user);
+        var newAccessToken = _tokenService.GenerateAccessToken(user, roles);
+
+        return newAccessToken;
     }
 }

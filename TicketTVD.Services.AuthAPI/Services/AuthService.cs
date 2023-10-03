@@ -73,7 +73,7 @@ public class AuthService : IAuthService
     public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
     {
         var user = _db.ApplicationUsers.FirstOrDefault(u =>
-            u.UserName.ToLower() == loginRequestDto.UserName.ToLower());
+            u.Email.ToLower() == loginRequestDto.Email.ToLower());
 
         bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 

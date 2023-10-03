@@ -5,12 +5,19 @@ using TicketTVD.Services.AuthAPI.Models;
 using TicketTVD.Services.AuthAPI.Services;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 
+var  AuthCors = "AuthCors";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddCors(p => p.AddPolicy(AuthCors, build =>
+{
+    build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
 
 
 // Add JWT Configs
@@ -40,6 +47,9 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseHttpsRedirection();
+
+app.UseCors(AuthCors);
+
 app.UseAuthentication();
 app.UseAuthorization();
 

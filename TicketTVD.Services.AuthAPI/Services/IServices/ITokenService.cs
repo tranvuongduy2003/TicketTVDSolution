@@ -5,7 +5,7 @@ namespace TicketTVD.Services.AuthAPI.Services.IServices;
 
 public interface ITokenService
 {
-    string GenerateAccessToken(ApplicationUser applicationUser, IEnumerable<string> roles);
+    string GenerateAccessToken(ApplicationUser applicationUser, IEnumerable<string> roles, DateTime tokenExpired);
     
     string GenerateRefreshToken();
     ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);

@@ -7,6 +7,7 @@ public interface IAuthService
 {
     Task<string> Register(RegistrationRequestDto registrationRequestDto);
     Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto);
+    Task<LoginResponseDto> LoginWithGoogle(LoginGoogleRequestDto loginGoogleRequestDto);
     Task<bool> AssignRole(string email, string roleName);
     Task<string> RefreshToken(string accessToken, string refreshToken);
     Task<UserDto?> GetUserProfile(string accessToken);

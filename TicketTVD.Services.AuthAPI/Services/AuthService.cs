@@ -5,6 +5,7 @@ using TicketTVD.Services.AuthAPI.Data;
 using TicketTVD.Services.AuthAPI.Models;
 using TicketTVD.Services.AuthAPI.Models.Dto;
 using TicketTVD.Services.AuthAPI.Services.IServices;
+using TicketTVD.Services.AuthAPI.Utility;
 
 namespace TicketTVD.Services.AuthAPI.Services;
 
@@ -25,7 +26,7 @@ public class AuthService : IAuthService
         _roleManager = roleManager;
         _mapper = mapper;
     }
-    
+
     public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
     {
         ApplicationUser user = new()
@@ -50,7 +51,7 @@ public class AuthService : IAuthService
                 }
 
                 await _userManager.AddToRoleAsync(user, registrationRequestDto.Role);
-                
+
                 UserDto userDto = new()
                 {
                     Email = userToReturn.Email,
@@ -86,14 +87,14 @@ public class AuthService : IAuthService
 
         //if user was found , Generate JWT Token
         var roles = await _userManager.GetRolesAsync(user);
-        var accessToken = _tokenService.GenerateAccessToken(user, roles);
+        var accessToken = _tokenService.GenerateAccessToken(user, roles, DateTime.Now.AddMinutes(5));
         var refreshToken = _tokenService.GenerateRefreshToken();
 
         user.RefreshToken = refreshToken;
         _db.SaveChanges();
-        
+
         var userRoles = await _userManager.GetRolesAsync(user);
-        
+
         var userDto = _mapper.Map<UserDto>(user);
         userDto.Role = userRoles.FirstOrDefault();
 
@@ -102,6 +103,59 @@ public class AuthService : IAuthService
             User = userDto,
             AccessToken = accessToken,
             RefreshToken = refreshToken
+        };
+
+        return loginResponseDto;
+    }
+
+    public async Task<LoginResponseDto> LoginWithGoogle(LoginGoogleRequestDto loginGoogleRequestDto)
+    {
+        var user = _db.ApplicationUsers.FirstOrDefault(u =>
+            u.Email.ToLower() == loginGoogleRequestDto.Email.ToLower());
+
+        if (user == null)
+        {
+            ApplicationUser googleUser = new()
+            {
+                UserName = loginGoogleRequestDto.Email,
+                Email = loginGoogleRequestDto.Email,
+                NormalizedEmail = loginGoogleRequestDto.Email.ToUpper(),
+                Name = loginGoogleRequestDto.Name,
+            };
+
+            var result = await _userManager.CreateAsync(googleUser);
+            if (result.Succeeded)
+            {
+                if (!_roleManager.RoleExistsAsync(SD.RoleCustomer).GetAwaiter().GetResult())
+                {
+                    _roleManager.CreateAsync(new IdentityRole(SD.RoleCustomer)).GetAwaiter().GetResult();
+                }
+
+                await _userManager.AddToRoleAsync(googleUser, SD.RoleCustomer);
+
+                user = googleUser;
+            }
+            else
+            {
+                return new LoginResponseDto() { User = null, RefreshToken = null, AccessToken = null };
+            }
+        }
+        
+        //if user was found , Generate JWT Token
+        var roles = await _userManager.GetRolesAsync(user);
+        var accessToken = _tokenService.GenerateAccessToken(user, roles, DateTime.Now.AddHours(8));
+        
+        _db.SaveChanges();
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Role = userRoles.FirstOrDefault();
+
+        LoginResponseDto loginResponseDto = new LoginResponseDto()
+        {
+            User = userDto,
+            AccessToken = accessToken
         };
 
         return loginResponseDto;
@@ -129,14 +183,14 @@ public class AuthService : IAuthService
     {
         var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
         if (principal == null) return "";
-        
-        var userEmail = principal.Claims.FirstOrDefault(c =>  c.Type == ClaimTypes.Email).Value;
+
+        var userEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
         var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
-        if (user is null || user.RefreshToken != refreshToken ||  _tokenService.ValidateTokenExpire(refreshToken))
+        if (user is null || user.RefreshToken != refreshToken || _tokenService.ValidateTokenExpire(refreshToken))
             return "";
-        
+
         var roles = await _userManager.GetRolesAsync(user);
-        var newAccessToken = _tokenService.GenerateAccessToken(user, roles);
+        var newAccessToken = _tokenService.GenerateAccessToken(user, roles, DateTime.Now.AddMinutes(5));
 
         return newAccessToken;
     }
@@ -145,16 +199,16 @@ public class AuthService : IAuthService
     {
         var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
         if (principal == null) return null;
-        
-        var userEmail = principal.Claims.FirstOrDefault(c =>  c.Type == ClaimTypes.Email).Value;
+
+        var userEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
         var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
         if (user is null) return null;
 
         var userRoles = await _userManager.GetRolesAsync(user);
-        
+
         var userDto = _mapper.Map<UserDto>(user);
         userDto.Role = userRoles.FirstOrDefault();
-        
+
         return userDto;
     }
 }

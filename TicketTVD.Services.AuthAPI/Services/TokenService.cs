@@ -19,7 +19,7 @@ public class TokenService : ITokenService
         _jwtOptions = jwtOptions.Value;
     }
 
-    public string GenerateAccessToken(ApplicationUser applicationUser, IEnumerable<string> roles)
+    public string GenerateAccessToken(ApplicationUser applicationUser, IEnumerable<string> roles, DateTime tokenExpired)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -37,7 +37,7 @@ public class TokenService : ITokenService
             issuer: _jwtOptions.Issuer,
             audience: _jwtOptions.Audience,
             claims: claimList,
-            expires: DateTime.Now.AddMinutes(5),
+            expires: tokenExpired,
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
         );
@@ -54,7 +54,7 @@ public class TokenService : ITokenService
         var token = new JwtSecurityToken(
             issuer: _jwtOptions.Issuer,
             audience: _jwtOptions.Audience,
-            expires: DateTime.Now.AddMinutes(5),
+            expires: DateTime.Now.AddHours(8),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key),
                 SecurityAlgorithms.HmacSha256Signature)
         );

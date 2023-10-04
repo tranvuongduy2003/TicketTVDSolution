@@ -64,6 +64,29 @@ namespace TicketTVD.Services.AuthAPI.Controllers
 
             return Ok(_response);
         }
+        
+        [HttpPost("login/google")]
+        public async Task<IActionResult> LoginGoogle([FromBody] LoginGoogleRequestDto model)
+        {
+            try
+            {
+                var loginResponse = await _authService.LoginWithGoogle(model);
+                if (loginResponse.User == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Tài khoản hoặc mật khẩu không đúng";
+                    return Unauthorized(_response);
+                }
+
+                _response.Data = loginResponse;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+            }
+
+            return Ok(_response);
+        }
 
         [HttpPost("assign-role")]
         public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDto model)

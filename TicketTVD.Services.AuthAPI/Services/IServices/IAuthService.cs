@@ -1,4 +1,5 @@
-﻿using TicketTVD.Services.AuthAPI.Models.Dto;
+﻿using TicketTVD.Services.AuthAPI.Models;
+using TicketTVD.Services.AuthAPI.Models.Dto;
 
 namespace TicketTVD.Services.AuthAPI.Services.IServices;
 
@@ -8,4 +9,5 @@ public interface IAuthService
     Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto);
     Task<bool> AssignRole(string email, string roleName);
     Task<string> RefreshToken(string accessToken, string refreshToken);
+    Task<UserDto?> GetUserProfile(string accessToken);
 }

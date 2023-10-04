@@ -119,5 +119,30 @@ namespace TicketTVD.Services.AuthAPI.Controllers
 
             return Ok(_response);
         }
+        
+        [HttpGet("profile")]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            try
+            {
+                var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
+                var user = await _authService.GetUserProfile(accessToken);
+                if (user is null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Unauthorized";
+                    return Unauthorized(_response);
+                }
+
+                _response.Data = user;
+                _response.Message = "Get user profile successfully";
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+            }
+
+            return Ok(_response);
+        }
     }
 }

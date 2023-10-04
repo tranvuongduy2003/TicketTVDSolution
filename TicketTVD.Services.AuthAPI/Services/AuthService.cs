@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.IdentityModel.JsonWebTokens;
 using TicketTVD.Services.AuthAPI.Data;
 using TicketTVD.Services.AuthAPI.Models;
 using TicketTVD.Services.AuthAPI.Models.Dto;
@@ -14,14 +14,16 @@ public class AuthService : IAuthService
     private readonly ITokenService _tokenService;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly RoleManager<IdentityRole> _roleManager;
+    private readonly IMapper _mapper;
 
     public AuthService(AppDbContext db, ITokenService tokenService,
-        UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
     {
         _db = db;
         _tokenService = tokenService;
         _userManager = userManager;
         _roleManager = roleManager;
+        _mapper = mapper;
     }
     
     public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
@@ -89,22 +91,15 @@ public class AuthService : IAuthService
 
         user.RefreshToken = refreshToken;
         _db.SaveChanges();
-
-        UserDto userDTO = new()
-        {
-            ID = user.Id,
-            Email = user.Email,
-            Name = user.Name,
-            PhoneNumber = user.PhoneNumber,
-            Status = user.Status,
-            Role = roles.FirstOrDefault(u => true), // Every users has only 1 their own role
-            CreatedAt = user.CreatedAt,
-            UpdatedAt = user.UpdatedAt,
-        };
+        
+        var userRoles = await _userManager.GetRolesAsync(user);
+        
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Role = userRoles.FirstOrDefault();
 
         LoginResponseDto loginResponseDto = new LoginResponseDto()
         {
-            User = userDTO,
+            User = userDto,
             AccessToken = accessToken,
             RefreshToken = refreshToken
         };
@@ -144,5 +139,22 @@ public class AuthService : IAuthService
         var newAccessToken = _tokenService.GenerateAccessToken(user, roles);
 
         return newAccessToken;
+    }
+
+    public async Task<UserDto?> GetUserProfile(string accessToken)
+    {
+        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+        if (principal == null) return null;
+        
+        var userEmail = principal.Claims.FirstOrDefault(c =>  c.Type == ClaimTypes.Email).Value;
+        var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
+        if (user is null) return null;
+
+        var userRoles = await _userManager.GetRolesAsync(user);
+        
+        var userDto = _mapper.Map<UserDto>(user);
+        userDto.Role = userRoles.FirstOrDefault();
+        
+        return userDto;
     }
 }

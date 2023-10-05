@@ -1,4 +1,7 @@
-﻿namespace TicketTVD.Services.AuthAPI.Models.Dto;
+﻿using System.Text.Json.Serialization;
+using TicketTVD.Services.AuthAPI.Models.Enum;
+
+namespace TicketTVD.Services.AuthAPI.Models.Dto;
 
 public class UserDto
 {
@@ -9,8 +12,10 @@ public class UserDto
     public DateTime? DOB { get; set; }
     public string? Gender { get; set; }
     public string? Avatar { get; set; }
-    public string Status { get; set; }
-    public string Role { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public Status Status { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public Role Role { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Extensions;
 using TicketTVD.Services.AuthAPI.Models;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 
@@ -32,6 +33,9 @@ public class TokenService : ITokenService
         };
 
         claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        
+        if (applicationUser.Provider != null)
+            claimList.Add(new Claim(ClaimTypes.AuthenticationMethod, applicationUser.Provider.GetDisplayName()));
         
         var token = new JwtSecurityToken(
             issuer: _jwtOptions.Issuer,

@@ -1,11 +1,12 @@
 ﻿using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Extensions;
 using TicketTVD.Services.AuthAPI.Data;
 using TicketTVD.Services.AuthAPI.Models;
 using TicketTVD.Services.AuthAPI.Models.Dto;
+using TicketTVD.Services.AuthAPI.Models.Enum;
 using TicketTVD.Services.AuthAPI.Services.IServices;
-using TicketTVD.Services.AuthAPI.Utility;
 
 namespace TicketTVD.Services.AuthAPI.Services;
 
@@ -29,6 +30,16 @@ public class AuthService : IAuthService
 
     public async Task<string> Register(RegistrationRequestDto registrationRequestDto)
     {
+        var useWithEmailExisted = _db.ApplicationUsers.FirstOrDefault(u =>
+            u.Email.ToLower() == registrationRequestDto.Email.ToLower());
+
+        if (useWithEmailExisted != null) return "Email đã tồn tài";
+
+        var useWithPhoneNumberExisted = _db.ApplicationUsers.FirstOrDefault(u =>
+            u.PhoneNumber == registrationRequestDto.PhoneNumber);
+
+        if (useWithPhoneNumberExisted != null) return "Số điện thoại đã tồn tài";
+
         ApplicationUser user = new()
         {
             UserName = registrationRequestDto.Email,
@@ -45,12 +56,14 @@ public class AuthService : IAuthService
             {
                 var userToReturn = _db.ApplicationUsers.First(u => u.UserName == registrationRequestDto.Email);
 
-                if (!_roleManager.RoleExistsAsync(registrationRequestDto.Role).GetAwaiter().GetResult())
+                if (!_roleManager.RoleExistsAsync(registrationRequestDto.Role.GetDisplayName()).GetAwaiter()
+                        .GetResult())
                 {
-                    _roleManager.CreateAsync(new IdentityRole(registrationRequestDto.Role)).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(registrationRequestDto.Role.GetDisplayName()))
+                        .GetAwaiter().GetResult();
                 }
 
-                await _userManager.AddToRoleAsync(user, registrationRequestDto.Role);
+                await _userManager.AddToRoleAsync(user, registrationRequestDto.Role.GetDisplayName());
 
                 UserDto userDto = new()
                 {
@@ -75,140 +88,200 @@ public class AuthService : IAuthService
 
     public async Task<LoginResponseDto> Login(LoginRequestDto loginRequestDto)
     {
-        var user = _db.ApplicationUsers.FirstOrDefault(u =>
-            u.Email.ToLower() == loginRequestDto.Email.ToLower());
-
-        bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
-
-        if (user == null || isValid == false)
+        try
         {
-            return new LoginResponseDto() { User = null, RefreshToken = null, AccessToken = null };
-        }
+            var user = _db.ApplicationUsers.FirstOrDefault(u =>
+                u.Email.ToLower() == loginRequestDto.Email.ToLower());
 
-        //if user was found , Generate JWT Token
-        var roles = await _userManager.GetRolesAsync(user);
-        var accessToken = _tokenService.GenerateAccessToken(user, roles, DateTime.Now.AddMinutes(5));
-        var refreshToken = _tokenService.GenerateRefreshToken();
+            bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
-        user.RefreshToken = refreshToken;
-        _db.SaveChanges();
-
-        var userRoles = await _userManager.GetRolesAsync(user);
-
-        var userDto = _mapper.Map<UserDto>(user);
-        userDto.Role = userRoles.FirstOrDefault();
-
-        LoginResponseDto loginResponseDto = new LoginResponseDto()
-        {
-            User = userDto,
-            AccessToken = accessToken,
-            RefreshToken = refreshToken
-        };
-
-        return loginResponseDto;
-    }
-
-    public async Task<LoginResponseDto> LoginWithGoogle(LoginGoogleRequestDto loginGoogleRequestDto)
-    {
-        var user = _db.ApplicationUsers.FirstOrDefault(u =>
-            u.Email.ToLower() == loginGoogleRequestDto.Email.ToLower());
-
-        if (user == null)
-        {
-            ApplicationUser googleUser = new()
-            {
-                UserName = loginGoogleRequestDto.Email,
-                Email = loginGoogleRequestDto.Email,
-                NormalizedEmail = loginGoogleRequestDto.Email.ToUpper(),
-                Name = loginGoogleRequestDto.Name,
-            };
-
-            var result = await _userManager.CreateAsync(googleUser);
-            if (result.Succeeded)
-            {
-                if (!_roleManager.RoleExistsAsync(SD.RoleCustomer).GetAwaiter().GetResult())
-                {
-                    _roleManager.CreateAsync(new IdentityRole(SD.RoleCustomer)).GetAwaiter().GetResult();
-                }
-
-                await _userManager.AddToRoleAsync(googleUser, SD.RoleCustomer);
-
-                user = googleUser;
-            }
-            else
+            if (user == null || isValid == false)
             {
                 return new LoginResponseDto() { User = null, RefreshToken = null, AccessToken = null };
             }
+
+            //if user was found , Generate JWT Token
+            var roles = await _userManager.GetRolesAsync(user);
+            var accessToken = _tokenService.GenerateAccessToken(user, roles, DateTime.Now.AddMinutes(5));
+            var refreshToken = _tokenService.GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            _db.SaveChanges();
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            var userDto = _mapper.Map<UserDto>(user);
+            userDto.Role = Enum.Parse<Role>(userRoles.FirstOrDefault());
+
+            LoginResponseDto loginResponseDto = new LoginResponseDto()
+            {
+                User = userDto,
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+
+            return loginResponseDto;
         }
-        
-        //if user was found , Generate JWT Token
-        var roles = await _userManager.GetRolesAsync(user);
-        var accessToken = _tokenService.GenerateAccessToken(user, roles, DateTime.Now.AddHours(8));
-        
-        _db.SaveChanges();
-
-        var userRoles = await _userManager.GetRolesAsync(user);
-
-        var userDto = _mapper.Map<UserDto>(user);
-        userDto.Role = userRoles.FirstOrDefault();
-
-        LoginResponseDto loginResponseDto = new LoginResponseDto()
+        catch (Exception ex)
         {
-            User = userDto,
-            AccessToken = accessToken
-        };
-
-        return loginResponseDto;
+            throw ex;
+        }
     }
 
-    public async Task<bool> AssignRole(string email, string roleName)
+    public async Task<LoginResponseDto> OAuthLogin(OAuthLoginRequestDto oAuthLoginRequestDto)
     {
-        var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == email.ToLower());
-        if (user != null)
+        try
         {
-            if (!_roleManager.RoleExistsAsync(roleName).GetAwaiter().GetResult())
+            ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(u =>
+                u.Provider == oAuthLoginRequestDto.Provider && ((oAuthLoginRequestDto.Email != null &&
+                                                                 u.Email.ToLower() ==
+                                                                 oAuthLoginRequestDto.Email.ToLower()) ||
+                                                                (oAuthLoginRequestDto.PhoneNumber != null &&
+                                                                 u.PhoneNumber == oAuthLoginRequestDto.PhoneNumber)));
+
+            if (user == null)
             {
-                //create role if it does not exist
-                _roleManager.CreateAsync(new IdentityRole(roleName)).GetAwaiter().GetResult();
+                user = new()
+                {
+                    UserName = oAuthLoginRequestDto.Email,
+                    Email = oAuthLoginRequestDto.Email,
+                    NormalizedEmail = oAuthLoginRequestDto.Email.ToUpper(),
+                    Name = oAuthLoginRequestDto.Name,
+                    PhoneNumber = oAuthLoginRequestDto.PhoneNumber,
+                    Provider = oAuthLoginRequestDto.Provider,
+                    Avatar = oAuthLoginRequestDto.Avatar,
+                };
+
+                var result = await _userManager.CreateAsync(user);
+                if (result.Succeeded)
+                {
+                    var userToReturn = _db.ApplicationUsers.First(u =>
+                        u.UserName == oAuthLoginRequestDto.Email ||
+                        u.PhoneNumber == oAuthLoginRequestDto.PhoneNumber);
+
+                    if (!_roleManager.RoleExistsAsync(Role.CUSTOMER.GetDisplayName()).GetAwaiter().GetResult())
+                    {
+                        _roleManager.CreateAsync(new IdentityRole(Role.CUSTOMER.GetDisplayName())).GetAwaiter()
+                            .GetResult();
+                    }
+
+                    await _userManager.AddToRoleAsync(user, Role.CUSTOMER.GetDisplayName());
+                }
+                else
+                {
+                    return new LoginResponseDto() { User = null, RefreshToken = null, AccessToken = null };
+                }
             }
 
-            await _userManager.AddToRoleAsync(user, roleName);
-            return true;
-        }
+            //if user was found , Generate JWT Token
+            var roles = await _userManager.GetRolesAsync(user);
+            var accessToken = _tokenService.GenerateAccessToken(user, roles, oAuthLoginRequestDto.TokenExpiredDate);
 
-        return false;
+            _db.SaveChanges();
+
+            var userDto = _mapper.Map<UserDto>(user);
+            userDto.Role = Enum.Parse<Role>(roles.FirstOrDefault());
+
+            LoginResponseDto loginResponseDto = new LoginResponseDto()
+            {
+                User = userDto,
+                AccessToken = accessToken
+            };
+
+            return loginResponseDto;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<bool> AssignRole(AssignRoleRequestDto assignRoleRequestDto)
+    {
+        try
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(u =>
+                u.Email.ToLower() == assignRoleRequestDto.Email.ToLower());
+            if (user != null)
+            {
+                if (!_roleManager.RoleExistsAsync(assignRoleRequestDto.Role.GetDisplayName()).GetAwaiter().GetResult())
+                {
+                    //create role if it does not exist
+                    _roleManager.CreateAsync(new IdentityRole(assignRoleRequestDto.Role.GetDisplayName())).GetAwaiter()
+                        .GetResult();
+                }
+
+                await _userManager.AddToRoleAsync(user, assignRoleRequestDto.Role.GetDisplayName());
+                return true;
+            }
+
+            return false;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
     public async Task<string> RefreshToken(string accessToken, string refreshToken)
     {
-        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
-        if (principal == null) return "";
+        try
+        {
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+            if (principal == null) return "";
 
-        var userEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-        var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
-        if (user is null || user.RefreshToken != refreshToken || _tokenService.ValidateTokenExpire(refreshToken))
-            return "";
+            var userEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
+            if (user is null || user.RefreshToken != refreshToken || !_tokenService.ValidateTokenExpire(refreshToken))
+            {
+                return "";
+            }
 
-        var roles = await _userManager.GetRolesAsync(user);
-        var newAccessToken = _tokenService.GenerateAccessToken(user, roles, DateTime.Now.AddMinutes(5));
+            var roles = await _userManager.GetRolesAsync(user);
+            var newAccessToken = _tokenService.GenerateAccessToken(user, roles, DateTime.Now.AddMinutes(5));
 
-        return newAccessToken;
+            return newAccessToken;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
     public async Task<UserDto?> GetUserProfile(string accessToken)
     {
-        var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
-        if (principal == null) return null;
+        try
+        {
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+            if (principal == null) return null;
 
-        var userEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-        var user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
-        if (user is null) return null;
+            var userEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            var userProvider = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.AuthenticationMethod).Value;
 
-        var userRoles = await _userManager.GetRolesAsync(user);
+            var user = new ApplicationUser();
+            if (userProvider != null)
+            {
+                user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
+                if (user is null) return null;
+            }
+            else
+            {
+                user = _db.ApplicationUsers.FirstOrDefault(u =>
+                    userProvider == u.Provider.ToString() &&
+                    u.Email.ToLower() == userEmail.ToLower());
+                if (user is null) return null;
+            }
 
-        var userDto = _mapper.Map<UserDto>(user);
-        userDto.Role = userRoles.FirstOrDefault();
+            var userRoles = await _userManager.GetRolesAsync(user);
 
-        return userDto;
+            var userDto = _mapper.Map<UserDto>(user);
+            userDto.Role = Enum.Parse<Role>(userRoles.FirstOrDefault());
+
+            return userDto;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 }

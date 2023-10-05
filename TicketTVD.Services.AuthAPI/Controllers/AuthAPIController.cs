@@ -36,7 +36,9 @@ namespace TicketTVD.Services.AuthAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
             return Ok(_response);
@@ -59,22 +61,24 @@ namespace TicketTVD.Services.AuthAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
             return Ok(_response);
         }
-        
-        [HttpPost("login/google")]
-        public async Task<IActionResult> LoginGoogle([FromBody] LoginGoogleRequestDto model)
+
+        [HttpPost("login/oauth")]
+        public async Task<IActionResult> OAuthLogin([FromBody] OAuthLoginRequestDto model)
         {
             try
             {
-                var loginResponse = await _authService.LoginWithGoogle(model);
+                var loginResponse = await _authService.OAuthLogin(model);
                 if (loginResponse.User == null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Tài khoản hoặc mật khẩu không đúng";
+                    _response.Message = "Tài khoản không tồn tại";
                     return Unauthorized(_response);
                 }
 
@@ -82,18 +86,20 @@ namespace TicketTVD.Services.AuthAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
             return Ok(_response);
         }
 
         [HttpPost("assign-role")]
-        public async Task<IActionResult> AssignRole([FromBody] RegistrationRequestDto model)
+        public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequestDto model)
         {
             try
             {
-                var assignRoleSuccessful = await _authService.AssignRole(model.Email, model.Role.ToUpper());
+                var assignRoleSuccessful = await _authService.AssignRole(model);
                 if (!assignRoleSuccessful)
                 {
                     _response.IsSuccess = false;
@@ -103,7 +109,9 @@ namespace TicketTVD.Services.AuthAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
             return Ok(_response);
@@ -115,7 +123,8 @@ namespace TicketTVD.Services.AuthAPI.Controllers
             try
             {
                 var accessToken = Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", "");
-                if (tokenRequestDto is null || tokenRequestDto.RefreshToken is null || tokenRequestDto.RefreshToken == "" ||
+                if (tokenRequestDto is null || tokenRequestDto.RefreshToken is null ||
+                    tokenRequestDto.RefreshToken == "" ||
                     accessToken is null || accessToken == "")
                 {
                     _response.IsSuccess = false;
@@ -137,12 +146,14 @@ namespace TicketTVD.Services.AuthAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
             return Ok(_response);
         }
-        
+
         [HttpGet("profile")]
         public async Task<IActionResult> GetUserProfile()
         {
@@ -162,7 +173,9 @@ namespace TicketTVD.Services.AuthAPI.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message.ToString());
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
             }
 
             return Ok(_response);

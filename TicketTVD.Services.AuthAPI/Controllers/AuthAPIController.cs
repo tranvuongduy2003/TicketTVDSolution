@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Extensions;
 using TicketTVD.Services.AuthAPI.Models.Dto;
+using TicketTVD.Services.AuthAPI.Models.Enum;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 
 namespace TicketTVD.Services.AuthAPI.Controllers
@@ -95,6 +98,8 @@ namespace TicketTVD.Services.AuthAPI.Controllers
         }
 
         [HttpPost("assign-role")]
+        [Authorize]
+        [Authorize(Roles = "ADMIN")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequestDto model)
         {
             try
@@ -155,6 +160,7 @@ namespace TicketTVD.Services.AuthAPI.Controllers
         }
 
         [HttpGet("profile")]
+        [Authorize]
         public async Task<IActionResult> GetUserProfile()
         {
             try

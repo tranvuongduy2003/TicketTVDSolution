@@ -8,7 +8,7 @@ using TicketTVD.Services.AuthAPI.Services.IServices;
 
 namespace TicketTVD.Services.AuthAPI.Controllers
 {
-    [Route("api/auth")]
+    [Route("auth")]
     [ApiController]
     public class AuthAPIController : ControllerBase
     {

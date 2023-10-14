@@ -1,21 +1,18 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TicketTVD.Services.AuthAPI.Models.Dto;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 
-namespace TicketTVD.Services.AuthAPI.Controllers;
-
-public class UserAPIController
+namespace TicketTVD.Services.AuthAPI.Controllers
 {
     [Route("user")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserAPIController : ControllerBase
     {
         private readonly IUserService _userService;
         protected ResponseDto _response;
 
-        public UserController(IUserService userService)
+        public UserAPIController(IUserService userService)
         {
             _userService = userService;
             _response = new();
@@ -103,7 +100,8 @@ public class UserAPIController
         [Authorize]
         [Authorize(Roles = "ADMIN")]
         [HttpPatch("{id}/password")]
-        public async Task<IActionResult> UpdateUserPassword(string id, [FromBody] UpdateUserPasswordDto updateUserPasswordDto)
+        public async Task<IActionResult> UpdateUserPassword(string id,
+            [FromBody] UpdateUserPasswordDto updateUserPasswordDto)
         {
             try
             {
@@ -114,14 +112,14 @@ public class UserAPIController
                     _response.Message = "Không tìm thấy người dùng!";
                     return NotFound(_response);
                 }
-                
+
                 if (message != "")
                 {
                     _response.IsSuccess = false;
                     _response.Message = message;
                     return BadRequest(_response);
                 }
-                
+
                 _response.Message = "Change user password successfully!";
             }
             catch (Exception ex)

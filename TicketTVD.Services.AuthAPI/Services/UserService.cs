@@ -15,7 +15,8 @@ public class UserService : IUserService
     private readonly RoleManager<IdentityRole> _roleManager;
     private readonly IMapper _mapper;
 
-    public UserService(AppDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper)
+    public UserService(AppDbContext db, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager,
+        IMapper mapper)
     {
         _db = db;
         _userManager = userManager;
@@ -25,69 +26,108 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<UserDto>> GetUsers()
     {
-        var users = _db.ApplicationUsers.ToList();
-        var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
-        return userDtos;
+        try
+        {
+            var users = _db.ApplicationUsers.ToList();
+            var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
+            return userDtos;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
     public async Task<UserDto?> GetUserById(string userId)
     {
-        var user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
-
-        if (user is null)
+        try
         {
-            return null;
-        }
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
 
-        var userDto = _mapper.Map<UserDto>(user);
-        return userDto;
+            if (user is null)
+            {
+                return null;
+            }
+
+            var userDto = _mapper.Map<UserDto>(user);
+            return userDto;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
     }
 
     public async Task<UserDto?> UpdateUser(string userId, UpdateUserDto updateUserDto)
     {
-        var user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
-
-        if (user is null)
+        try
         {
-            return null;
-        }
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
 
-        var updatedUser = _mapper.Map<ApplicationUser>(updateUserDto);
-        updatedUser.Id = userId;
-        _userManager.UpdateAsync(updatedUser);
-        
-        if (!_roleManager.RoleExistsAsync(updateUserDto.Role.GetDisplayName()).GetAwaiter()
-                .GetResult())
+            if (user is null)
+            {
+                return null;
+            }
+
+            var updatedUser = _mapper.Map<ApplicationUser>(updateUserDto);
+            user.Name = updateUserDto.Name;
+            user.Avatar = updateUserDto.Avatar;
+            user.Email = updateUserDto.Email;
+            user.Gender = updateUserDto.Gender;
+            user.Status = updateUserDto.Status;
+            user.PhoneNumber = updateUserDto.PhoneNumber;
+            user.DOB = updateUserDto.DOB;
+            user.UpdatedAt = DateTime.Now;
+            _db.SaveChanges();
+
+            if (!_roleManager.RoleExistsAsync(updateUserDto.Role.GetDisplayName()).GetAwaiter()
+                    .GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole(updateUserDto.Role.GetDisplayName()))
+                    .GetAwaiter().GetResult();
+            }
+
+            var userRoles = await _userManager.GetRolesAsync(updatedUser);
+            await _userManager.RemoveFromRolesAsync(updatedUser, userRoles);
+            await _userManager.AddToRoleAsync(updatedUser, updateUserDto.Role.GetDisplayName());
+
+
+            var updatedUserDto = _mapper.Map<UserDto>(updatedUser);
+            return updatedUserDto;
+        }
+        catch (Exception ex)
         {
-            _roleManager.CreateAsync(new IdentityRole(updateUserDto.Role.GetDisplayName()))
-                .GetAwaiter().GetResult();
+            throw ex;
         }
-
-        var userRoles = await _userManager.GetRolesAsync(updatedUser);
-        await _userManager.RemoveFromRolesAsync(updatedUser, userRoles);
-        await _userManager.AddToRoleAsync(updatedUser, updateUserDto.Role.GetDisplayName());
-
-        var updatedUserDto = _mapper.Map<UserDto>(updatedUser);
-        return updatedUserDto;
     }
 
     public async Task<string?> UpdateUserPassword(string userId, UpdateUserPasswordDto updateUserPasswordDto)
     {
-        var user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
-        if (user is null)
+        try
         {
-            return null;
-        }
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+            if (user is null)
+            {
+                return null;
+            }
 
-        bool isValid = await _userManager.CheckPasswordAsync(user, updateUserPasswordDto.OldPassword);
-        if (!isValid)
+            bool isValid = await _userManager.CheckPasswordAsync(user, updateUserPasswordDto.OldPassword);
+            if (!isValid)
+            {
+                return "Old password is wrong";
+            }
+
+            await _userManager.ChangePasswordAsync(user, updateUserPasswordDto.OldPassword,
+                updateUserPasswordDto.NewPassword);
+
+            user.UpdatedAt = DateTime.Now;
+            _db.SaveChanges();
+
+            return "";
+        }
+        catch (Exception ex)
         {
-            return "Old password is wrong";
+            throw ex;
         }
-
-        await _userManager.ChangePasswordAsync(user, updateUserPasswordDto.OldPassword,
-            updateUserPasswordDto.NewPassword);
-
-        return "";
     }
 }

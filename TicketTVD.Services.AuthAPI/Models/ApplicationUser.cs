@@ -8,7 +8,7 @@ namespace TicketTVD.Services.AuthAPI.Models;
 public class ApplicationUser : IdentityUser
 {
     public string Name { get; set; }
-    public DateTime? DOD { get; set; } = null;
+    public DateTime? DOB { get; set; } = null;
     public string? Gender { get; set; }
     public string? Avatar { get; set; }
     

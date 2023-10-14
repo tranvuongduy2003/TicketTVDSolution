@@ -72,6 +72,10 @@ public class AuthService : IAuthService
                     Name = userToReturn.Name,
                     PhoneNumber = userToReturn.PhoneNumber
                 };
+                
+                user.UpdatedAt = DateTime.Now;
+                user.CreatedAt = DateTime.Now;
+                _db.SaveChanges();
 
                 return "";
             }
@@ -106,6 +110,7 @@ public class AuthService : IAuthService
             var refreshToken = _tokenService.GenerateRefreshToken();
 
             user.RefreshToken = refreshToken;
+            user.UpdatedAt = DateTime.Now;
             _db.SaveChanges();
 
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -166,6 +171,9 @@ public class AuthService : IAuthService
                     }
 
                     await _userManager.AddToRoleAsync(user, Role.CUSTOMER.GetDisplayName());
+                    
+                    user.UpdatedAt = DateTime.Now;
+                    user.CreatedAt = DateTime.Now;
                 }
                 else
                 {
@@ -212,6 +220,10 @@ public class AuthService : IAuthService
                 }
 
                 await _userManager.AddToRoleAsync(user, assignRoleRequestDto.Role.GetDisplayName());
+                
+                user.UpdatedAt = DateTime.Now;
+                _db.SaveChanges();
+                
                 return true;
             }
 

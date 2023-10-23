@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using Microsoft.OpenApi.Extensions;
 using TicketTVD.Services.AuthAPI.Models.Dto;
-using TicketTVD.Services.AuthAPI.Models.Enum;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 
 namespace TicketTVD.Services.AuthAPI.Controllers

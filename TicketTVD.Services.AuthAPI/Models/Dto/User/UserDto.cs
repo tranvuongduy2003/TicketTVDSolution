@@ -12,6 +12,9 @@ public class UserDto
     public DateTime? DOB { get; set; }
     public string? Gender { get; set; }
     public string? Avatar { get; set; }
+    public int? TotalBuyedTickets { get; set; }
+    public int? TotalEvents { get; set; }
+    public int? TotalSoldTickets { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Status Status { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]

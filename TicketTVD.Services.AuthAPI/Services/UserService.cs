@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Extensions;
 using TicketTVD.Services.AuthAPI.Data;
 using TicketTVD.Services.AuthAPI.Models;
 using TicketTVD.Services.AuthAPI.Models.Dto;
+using TicketTVD.Services.AuthAPI.Models.Enum;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 
 namespace TicketTVD.Services.AuthAPI.Services;
@@ -30,6 +31,24 @@ public class UserService : IUserService
         {
             var users = _db.ApplicationUsers.ToList();
             var userDtos = _mapper.Map<IEnumerable<UserDto>>(users);
+
+            foreach (var userDto in userDtos)
+            {
+                var userRoles = await _userManager.GetRolesAsync(_mapper.Map<ApplicationUser>(userDto));
+                var userRole = Enum.Parse<Role>(userRoles.FirstOrDefault());
+                switch (userRole)
+                {
+                    case Role.CUSTOMER:
+                        userDto.TotalBuyedTickets = 0;
+                        break;
+                    case Role.ORGANIZER:
+                        userDto.TotalEvents = 0;
+                        userDto.TotalSoldTickets = 0;
+                        break;
+                }
+                userDto.Role = userRole;
+            }
+
             return userDtos;
         }
         catch (Exception ex)
@@ -49,7 +68,10 @@ public class UserService : IUserService
                 return null;
             }
 
+            var userRoles = await _userManager.GetRolesAsync(user);
             var userDto = _mapper.Map<UserDto>(user);
+            userDto.Role = Enum.Parse<Role>(userRoles.FirstOrDefault());
+
             return userDto;
         }
         catch (Exception ex)

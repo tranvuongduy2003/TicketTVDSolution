@@ -268,21 +268,24 @@ public class AuthService : IAuthService
             if (principal == null) return null;
 
             var userEmail = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
-            var userProvider = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.AuthenticationMethod).Value;
+            // var userProvider = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.AuthenticationMethod).Value;
 
             var user = new ApplicationUser();
-            if (userProvider != null)
-            {
-                user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
-                if (user is null) return null;
-            }
-            else
-            {
-                user = _db.ApplicationUsers.FirstOrDefault(u =>
-                    userProvider == u.Provider.ToString() &&
-                    u.Email.ToLower() == userEmail.ToLower());
-                if (user is null) return null;
-            }
+            
+            user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
+            if (user is null) return null;
+            // if (userProvider is null)
+            // {
+            //     user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
+            //     if (user is null) return null;
+            // }
+            // else
+            // {
+            //     user = _db.ApplicationUsers.FirstOrDefault(u =>
+            //         userProvider == u.Provider.ToString() &&
+            //         u.Email.ToLower() == userEmail.ToLower());
+            //     if (user is null) return null;
+            // }
 
             var userRoles = await _userManager.GetRolesAsync(user);
 

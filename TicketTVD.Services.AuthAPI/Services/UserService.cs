@@ -71,6 +71,16 @@ public class UserService : IUserService
             var userRoles = await _userManager.GetRolesAsync(user);
             var userDto = _mapper.Map<UserDto>(user);
             userDto.Role = Enum.Parse<Role>(userRoles.FirstOrDefault());
+            switch (userDto.Role)
+            {
+                case Role.CUSTOMER:
+                    userDto.TotalBuyedTickets = 0;
+                    break;
+                case Role.ORGANIZER:
+                    userDto.TotalEvents = 0;
+                    userDto.TotalSoldTickets = 0;
+                    break;
+            }
 
             return userDto;
         }
@@ -142,6 +152,28 @@ public class UserService : IUserService
             await _userManager.ChangePasswordAsync(user, updateUserPasswordDto.OldPassword,
                 updateUserPasswordDto.NewPassword);
 
+            user.UpdatedAt = DateTime.Now;
+            _db.SaveChanges();
+
+            return "";
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+    
+    public async Task<string?> UpdateUserStatus(string userId, UpdateUserStatusDto updateUserStatusDto)
+    {
+        try
+        {
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.Id == userId);
+            if (user is null)
+            {
+                return null;
+            }
+
+            user.Status = updateUserStatusDto.Status;
             user.UpdatedAt = DateTime.Now;
             _db.SaveChanges();
 

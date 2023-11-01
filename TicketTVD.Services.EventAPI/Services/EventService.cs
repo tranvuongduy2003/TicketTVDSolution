@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using TicketTVD.Services.EventAPI.Data;
 using TicketTVD.Services.EventAPI.Models;
 using TicketTVD.Services.EventAPI.Models.Dto;
@@ -76,7 +75,17 @@ public class EventService : IEventService
             newEvent.CreatedAt = DateTime.Now;
             newEvent.UpdatedAt = DateTime.Now;
             
-            _db.Events.AddAsync(newEvent);
+            var createdEvent = await _db.Events.AddAsync(newEvent);
+
+            await _ticketService.CreateTicketDetail(new CreateTicketDetailDto
+            {
+                EventId = createdEvent.Entity.Id,
+                IsPaid = createEventDto.TicketIsPaid,
+                Price = createEventDto.TicketPrice ?? 0,
+                Quantity = createEventDto.TicketQuantity,
+                StartTime = createEventDto.TicketStartTime,
+                CloseTime = createEventDto.TicketCloseTime,
+            });
             
             return true;
         }
@@ -112,8 +121,18 @@ public class EventService : IEventService
             eventFromDb.PublishTime = updateEventDto.PublishTime;
             eventFromDb.CreatorId = updateEventDto.CreatorId;
             eventFromDb.UpdatedAt = DateTime.Now;
+
+            await _ticketService.UpdateTicketDetailByEventId(eventId, new CreateTicketDetailDto
+            {
+                EventId = eventId,
+                IsPaid = updateEventDto.TicketIsPaid,
+                Price = updateEventDto.TicketPrice ?? 0,
+                Quantity = updateEventDto.TicketQuantity,
+                StartTime = updateEventDto.TicketStartTime,
+                CloseTime = updateEventDto.TicketCloseTime,
+            });
             
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             
             return true;
         }

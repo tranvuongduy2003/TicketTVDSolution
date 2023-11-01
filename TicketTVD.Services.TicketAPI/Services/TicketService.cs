@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using TicketTVD.Services.TicketAPI.Data;
+using TicketTVD.Services.TicketAPI.Models;
 using TicketTVD.Services.TicketAPI.Models.Dto;
 using TicketTVD.Services.TicketAPI.Services.IServices;
 
@@ -102,6 +103,78 @@ public class TicketService : ITicketService
             var ticketDetailDto = _mapper.Map<TicketDetailDto>(ticketDetail);
 
             return ticketDetailDto;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<bool> CreateTicketDetail(CreateTicketDetailDto createTicketDetailDto)
+    {
+        try
+        {
+            var newTicketDetail = _mapper.Map<TicketDetail>(createTicketDetailDto);
+            
+            _db.TicketDetails.AddAsync(newTicketDetail);
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<bool> UpdateTicketDetail(int ticketDetailId, CreateTicketDetailDto updateTicketDetailDto)
+    {
+        try
+        {
+            var ticketDetail = _db.TicketDetails.FirstOrDefault(u => u.Id == ticketDetailId);
+
+            if (ticketDetail is null)
+            {
+                return false;
+            }
+            
+            ticketDetail.IsPaid = updateTicketDetailDto.IsPaid;
+            ticketDetail.Quantity = updateTicketDetailDto.Quantity;
+            ticketDetail.EventId = updateTicketDetailDto.EventId;
+            ticketDetail.Price = updateTicketDetailDto.Price;
+            ticketDetail.StartTime = updateTicketDetailDto.StartTime;
+            ticketDetail.CloseTime = updateTicketDetailDto.CloseTime;
+            
+            _db.SaveChanges();
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<bool> UpdateTicketDetailByEventId(int eventId, CreateTicketDetailDto updateTicketDetailDto)
+    {
+        try
+        {
+            var ticketDetail = _db.TicketDetails.FirstOrDefault(u => u.EventId == eventId);
+
+            if (ticketDetail is null)
+            {
+                return false;
+            }
+            
+            ticketDetail.IsPaid = updateTicketDetailDto.IsPaid;
+            ticketDetail.Quantity = updateTicketDetailDto.Quantity;
+            ticketDetail.EventId = updateTicketDetailDto.EventId;
+            ticketDetail.Price = updateTicketDetailDto.Price;
+            ticketDetail.StartTime = updateTicketDetailDto.StartTime;
+            ticketDetail.CloseTime = updateTicketDetailDto.CloseTime;
+            
+            _db.SaveChanges();
+            
+            return true;
         }
         catch (Exception ex)
         {

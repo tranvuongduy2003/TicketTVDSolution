@@ -71,7 +71,7 @@ namespace TicketTVD.Services.TicketAPI.Controllers
         {
             try
             {
-                var ticketDetailDto = await _ticketService.GetTicketDetailById(eventId);
+                var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventId);
 
                 if (ticketDetailDto is null)
                 {
@@ -82,6 +82,79 @@ namespace TicketTVD.Services.TicketAPI.Controllers
 
                 _response.Data = ticketDetailDto;
                 _response.Message = "Get the detailed ticket successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+        
+        [HttpPost]
+        public async Task<IActionResult> CreateTicketDetail([FromBody] CreateTicketDetailDto createTicketDetailDto)
+        {
+            try
+            {
+                var result = await _ticketService.CreateTicketDetail(createTicketDetailDto);
+                
+                _response.Message = "Create new detailed ticket successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+        
+        [HttpPut]
+        [Route("{id:int}")]
+        public async Task<IActionResult> UpdateTicketDetail(int id, [FromBody] CreateTicketDetailDto udpateTicketDetailDto)
+        {
+            try
+            {
+                var result = await _ticketService.UpdateTicketDetail(id, udpateTicketDetailDto);
+
+                if (!result)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Thông tin chi tiết vé không tồn tại!";
+                    return NotFound(_response);
+                }
+                
+                _response.Message = "Update the detailed ticket successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+        
+        [HttpPut]
+        [Route("event/{eventId:int}")]
+        public async Task<IActionResult> UpdateTicketDetailByEventId(int eventId, [FromBody] CreateTicketDetailDto udpateTicketDetailDto)
+        {
+            try
+            {
+                var result = await _ticketService.UpdateTicketDetailByEventId(eventId, udpateTicketDetailDto);
+
+                if (!result)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Thông tin chi tiết vé không tồn tại!";
+                    return NotFound(_response);
+                }
+                
+                _response.Message = "Update the detailed ticket successfully!";
             }
             catch (Exception ex)
             {

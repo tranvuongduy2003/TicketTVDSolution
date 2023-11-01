@@ -12,6 +12,7 @@ public class MappingConfig
         {
             config.CreateMap<TicketDto, Ticket>().ReverseMap();
             config.CreateMap<TicketDetailDto, TicketDetail>().ReverseMap();
+            config.CreateMap<CreateTicketDetailDto, TicketDetail>();
         });
         return mappingConfig;
     }

@@ -38,7 +38,8 @@ namespace TicketTVD.Services.EventAPI.Controllers
             return Ok(_response);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet]
+        [Route("{id:int}")]
         public async Task<IActionResult> GetEventById(int id)
         {
             try
@@ -48,7 +49,7 @@ namespace TicketTVD.Services.EventAPI.Controllers
                 if (eventDto is null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Không tìm thấy người dùng!";
+                    _response.Message = "Không tìm thấy sự kiện!";
                     return NotFound(_response);
                 }
 
@@ -64,14 +65,77 @@ namespace TicketTVD.Services.EventAPI.Controllers
 
             return Ok(_response);
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto updateEventDto) {}
-        
+        public async Task<IActionResult> CreateEvent([FromBody] CreateEventDto createEventDto)
+        {
+            try
+            {
+                var eventDto = await _eventService.CreateEvent(createEventDto);
+
+                _response.Data = eventDto;
+                _response.Message = "Create the event successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateEvent(int id, [FromBody] UpdateEventDto updateEventDto) {}
-        
+        public async Task<IActionResult> UpdateEvent(int id, [FromBody] UpdateEventDto updateEventDto)
+        {
+            try
+            {
+                var result = await _eventService.UpdateEvent(id, updateEventDto);
+
+                if (!result)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Không tìm thấy sự kiện!";
+                    return NotFound(_response);
+                }
+
+                _response.Message = "Update the event successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+
         [HttpDelete("{id:int}")]
-        public async Task<IActionResult> DeleteEvent(int id) {}
+        public async Task<IActionResult> DeleteEvent(int id)
+        {
+            try
+            {
+                var result = await _eventService.DeleteEvent(id);
+
+                if (!result)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Không tìm thấy sự kiện!";
+                    return NotFound(_response);
+                }
+
+                _response.Message = "Delete the event successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
     }
 }

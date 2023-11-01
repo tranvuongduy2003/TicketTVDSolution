@@ -1,14 +1,10 @@
-﻿using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 using TicketTVD.Services.EventAPI.Models.Enum;
 
-namespace TicketTVD.Services.EventAPI.Models;
+namespace TicketTVD.Services.EventAPI.Models.Dto;
 
-public class Event
+public class DetailEventDto
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
     public string CoverImage { get; set; }
     public string Name { get; set; }
@@ -21,7 +17,7 @@ public class Event
     public DateTime EndTime { get; set; }
     public string CreatorId { get; set; }
     public Boolean IsPromotion { get; set; }
-    public int? PromotionPlan { get; set; }
+    public int PromotionPlan { get; set; }
     public DateTime PublishTime { get; set; }
     public int Favourite { get; set; }
     public int Share { get; set; }

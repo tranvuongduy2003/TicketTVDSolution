@@ -133,77 +133,6 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task<LoginResponseDto> OAuthLogin(OAuthLoginRequestDto oAuthLoginRequestDto)
-    {
-        try
-        {
-            ApplicationUser user = _db.ApplicationUsers.FirstOrDefault(u =>
-                u.Provider == oAuthLoginRequestDto.Provider && ((oAuthLoginRequestDto.Email != null &&
-                                                                 u.Email.ToLower() ==
-                                                                 oAuthLoginRequestDto.Email.ToLower()) ||
-                                                                (oAuthLoginRequestDto.PhoneNumber != null &&
-                                                                 u.PhoneNumber == oAuthLoginRequestDto.PhoneNumber)));
-
-            if (user == null)
-            {
-                user = new()
-                {
-                    UserName = oAuthLoginRequestDto.Email,
-                    Email = oAuthLoginRequestDto.Email,
-                    NormalizedEmail = oAuthLoginRequestDto.Email.ToUpper(),
-                    Name = oAuthLoginRequestDto.Name,
-                    PhoneNumber = oAuthLoginRequestDto.PhoneNumber,
-                    Provider = oAuthLoginRequestDto.Provider,
-                    Avatar = oAuthLoginRequestDto.Avatar,
-                };
-
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
-                {
-                    var userToReturn = _db.ApplicationUsers.First(u =>
-                        u.UserName == oAuthLoginRequestDto.Email ||
-                        u.PhoneNumber == oAuthLoginRequestDto.PhoneNumber);
-
-                    if (!_roleManager.RoleExistsAsync(Role.CUSTOMER.GetDisplayName()).GetAwaiter().GetResult())
-                    {
-                        _roleManager.CreateAsync(new IdentityRole(Role.CUSTOMER.GetDisplayName())).GetAwaiter()
-                            .GetResult();
-                    }
-
-                    await _userManager.AddToRoleAsync(user, Role.CUSTOMER.GetDisplayName());
-                    
-                    user.UpdatedAt = DateTime.Now;
-                    user.CreatedAt = DateTime.Now;
-                }
-                else
-                {
-                    return new LoginResponseDto() { User = null, RefreshToken = null, AccessToken = null };
-                }
-            }
-
-            //if user was found , Generate JWT Token
-            var roles = await _userManager.GetRolesAsync(user);
-            var accessToken = _tokenService.GenerateAccessToken(user, roles, oAuthLoginRequestDto.TokenExpiredDate);
-
-            _db.SaveChanges();
-
-            var userDto = _mapper.Map<UserDto>(user);
-            userDto.Role = Enum.Parse<Role>(roles.FirstOrDefault());
-
-            LoginResponseDto loginResponseDto = new LoginResponseDto()
-            {
-                User = userDto,
-                AccessToken = accessToken
-            };
-
-            return loginResponseDto;
-        }
-        catch (Exception ex)
-        {
-            throw ex;
-        }
-    }
-
     public async Task<bool> AssignRole(AssignRoleRequestDto assignRoleRequestDto)
     {
         try
@@ -274,18 +203,6 @@ public class AuthService : IAuthService
             
             user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
             if (user is null) return null;
-            // if (userProvider is null)
-            // {
-            //     user = _db.ApplicationUsers.FirstOrDefault(u => u.Email.ToLower() == userEmail.ToLower());
-            //     if (user is null) return null;
-            // }
-            // else
-            // {
-            //     user = _db.ApplicationUsers.FirstOrDefault(u =>
-            //         userProvider == u.Provider.ToString() &&
-            //         u.Email.ToLower() == userEmail.ToLower());
-            //     if (user is null) return null;
-            // }
 
             var userRoles = await _userManager.GetRolesAsync(user);
 

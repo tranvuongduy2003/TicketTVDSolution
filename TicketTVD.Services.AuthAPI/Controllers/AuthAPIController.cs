@@ -70,55 +70,30 @@ namespace TicketTVD.Services.AuthAPI.Controllers
             return Ok(_response);
         }
 
-        [HttpPost("login/oauth")]
-        public async Task<IActionResult> OAuthLogin([FromBody] OAuthLoginRequestDto model)
-        {
-            try
-            {
-                var loginResponse = await _authService.OAuthLogin(model);
-                if (loginResponse.User == null)
-                {
-                    _response.IsSuccess = false;
-                    _response.Message = "Tài khoản không tồn tại";
-                    return Unauthorized(_response);
-                }
-
-                _response.Data = loginResponse;
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Message = ex.Message.ToString();
-                return StatusCode(StatusCodes.Status500InternalServerError, _response);
-            }
-
-            return Ok(_response);
-        }
-
-        [HttpPost("assign-role")]
-        [Authorize]
-        [Authorize(Roles = "ADMIN")]
-        public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequestDto model)
-        {
-            try
-            {
-                var assignRoleSuccessful = await _authService.AssignRole(model);
-                if (!assignRoleSuccessful)
-                {
-                    _response.IsSuccess = false;
-                    _response.Message = "Something went wrong";
-                    return BadRequest(_response);
-                }
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.Message = ex.Message.ToString();
-                return StatusCode(StatusCodes.Status500InternalServerError, _response);
-            }
-
-            return Ok(_response);
-        }
+        // [HttpPost("assign-role")]
+        // [Authorize]
+        // [Authorize(Roles = "ADMIN")]
+        // public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequestDto model)
+        // {
+        //     try
+        //     {
+        //         var assignRoleSuccessful = await _authService.AssignRole(model);
+        //         if (!assignRoleSuccessful)
+        //         {
+        //             _response.IsSuccess = false;
+        //             _response.Message = "Something went wrong";
+        //             return BadRequest(_response);
+        //         }
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _response.IsSuccess = false;
+        //         _response.Message = ex.Message.ToString();
+        //         return StatusCode(StatusCodes.Status500InternalServerError, _response);
+        //     }
+        //
+        //     return Ok(_response);
+        // }
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto tokenRequestDto)
@@ -131,7 +106,7 @@ namespace TicketTVD.Services.AuthAPI.Controllers
                     accessToken is null || accessToken == "")
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Invalid client request";
+                    _response.Message = "Thông tin xác thực không hợp lệ";
                     return BadRequest(_response);
                 }
 
@@ -141,7 +116,7 @@ namespace TicketTVD.Services.AuthAPI.Controllers
                 if (newAccessToken == "" || newAccessToken is null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Invalid access token or refresh token";
+                    _response.Message = "Thông tin xác thực không hợp lệ";
                     return BadRequest(_response);
                 }
 
@@ -168,7 +143,7 @@ namespace TicketTVD.Services.AuthAPI.Controllers
                 if (user is null)
                 {
                     _response.IsSuccess = false;
-                    _response.Message = "Unauthorized";
+                    _response.Message = "Thông tin xác thực không hợp lệ";
                     return Unauthorized(_response);
                 }
 

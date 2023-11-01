@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketTVD.Services.TicketAP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketTVD.Services.PaymentAPI", "TicketTVD.Services.PaymentAPI\TicketTVD.Services.PaymentAPI.csproj", "{46AB7F97-5FCE-4858-A66E-7E7EA41AD047}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketTVD.Services.FileAPI", "TicketTVD.Services.FileAPI\TicketTVD.Services.FileAPI.csproj", "{D6F2B4B3-6C8D-4B04-A732-10613E3A60FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +38,7 @@ Global
 		{2385A76F-9301-4C52-B7EA-F72DE8025808} = {ECA317BF-F5BD-44F6-972D-940522884104}
 		{31AF5F3D-9955-41E8-B2AE-9EC1AB76D57F} = {ECA317BF-F5BD-44F6-972D-940522884104}
 		{46AB7F97-5FCE-4858-A66E-7E7EA41AD047} = {ECA317BF-F5BD-44F6-972D-940522884104}
+		{D6F2B4B3-6C8D-4B04-A732-10613E3A60FD} = {ECA317BF-F5BD-44F6-972D-940522884104}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D6F9D04A-9C55-47AF-808D-A73B981369E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -70,5 +73,9 @@ Global
 		{46AB7F97-5FCE-4858-A66E-7E7EA41AD047}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46AB7F97-5FCE-4858-A66E-7E7EA41AD047}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46AB7F97-5FCE-4858-A66E-7E7EA41AD047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6F2B4B3-6C8D-4B04-A732-10613E3A60FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6F2B4B3-6C8D-4B04-A732-10613E3A60FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6F2B4B3-6C8D-4B04-A732-10613E3A60FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6F2B4B3-6C8D-4B04-A732-10613E3A60FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

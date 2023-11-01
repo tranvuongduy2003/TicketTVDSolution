@@ -131,5 +131,40 @@ namespace TicketTVD.Services.AuthAPI.Controllers
 
             return Ok(_response);
         }
+        
+        [Authorize]
+        [Authorize(Roles = "ADMIN")]
+        [HttpPatch("{id}/status")]
+        public async Task<IActionResult> UpdateUserStatus(string id,
+            [FromBody] UpdateUserStatusDto updateUserStatusdDto)
+        {
+            try
+            {
+                var message = await _userService.UpdateUserStatus(id, updateUserStatusdDto);
+                if (message is null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Không tìm thấy người dùng!";
+                    return NotFound(_response);
+                }
+
+                if (message != "")
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = message;
+                    return BadRequest(_response);
+                }
+
+                _response.Message = "Change user status successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
     }
 }

@@ -1,31 +1,19 @@
-using AutoMapper;
-using TicketTVD.Services.EventAPI;
-using TicketTVD.Services.EventAPI.Data;
-using TicketTVD.Services.EventAPI.Extensions;
-using TicketTVD.Services.EventAPI.Services;
-using TicketTVD.Services.EventAPI.Services.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
+using TicketTVD.Services.FileAPI.Extensions;
+using TicketTVD.Services.FileAPI.Services;
+
+var FileCors = "FileCors";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<ApplicationDbContext>(option =>
-{
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
+builder.Services.AddCors(p =>
+    p.AddPolicy(FileCors, build => { build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader(); }));
 
-IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
-builder.Services.AddSingleton(mapper);
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-// Add services to the container.
 builder.Services.AddControllers();
-builder.Services.AddControllers().AddJsonOptions(options =>
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
-builder.Services.AddScoped<IEventService, EventService>();
-
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
 {
@@ -52,6 +40,7 @@ builder.Services.AddSwaggerGen(option =>
         }
     });
 });
+builder.Services.AddSingleton<FileService>();
 
 builder.AddAppAuthetication();
 
@@ -65,9 +54,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "EVENT API");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FILE API");
     });
 }
+
+app.UseCors(FileCors);
 
 app.UseHttpsRedirection();
 

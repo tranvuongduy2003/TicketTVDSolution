@@ -24,6 +24,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IEventService, EventService>();
 
 builder.Services.AddEndpointsApiExplorer();

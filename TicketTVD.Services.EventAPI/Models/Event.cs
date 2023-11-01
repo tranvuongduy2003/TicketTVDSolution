@@ -20,7 +20,7 @@ public class Event
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public string CreatorId { get; set; }
-    public Boolean IsPromotion { get; set; }
+    public bool IsPromotion { get; set; }
     public int? PromotionPlan { get; set; }
     public DateTime PublishTime { get; set; }
     public int Favourite { get; set; }

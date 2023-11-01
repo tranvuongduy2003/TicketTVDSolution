@@ -11,11 +11,13 @@ public class EventService : IEventService
 {
     private readonly ApplicationDbContext _db;
     private readonly IMapper _mapper;
+    private readonly ITicketService _ticketService;
 
-    public EventService(ApplicationDbContext db, IMapper mapper)
+    public EventService(ApplicationDbContext db, IMapper mapper, ITicketService ticketService)
     {
         _db = db;
         _mapper = mapper;
+        _ticketService = ticketService;
     }
     
     public async Task<IEnumerable<EventDto>> GetEvents()
@@ -24,6 +26,12 @@ public class EventService : IEventService
         {
             var events = _db.Events.ToList();
             var eventDtos = _mapper.Map<IEnumerable<EventDto>>(events);
+            
+            foreach (var eventDto in eventDtos)
+            {
+                var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
+                eventDto.TicketPrice = ticketDetailDto.Price;
+            }
 
             return eventDtos;
         }
@@ -45,6 +53,12 @@ public class EventService : IEventService
             }
             
             var eventDto = _mapper.Map<DetailEventDto>(eventFromDb);
+            var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
+            eventDto.TicketPrice = ticketDetailDto.Price;
+            eventDto.TicketIsPaid = ticketDetailDto.IsPaid;
+            eventDto.TicketQuantity = ticketDetailDto.Quantity;
+            eventDto.TicketStartTime = ticketDetailDto.StartTime;
+            eventDto.TicketCloseTime = ticketDetailDto.CloseTime;
 
             return eventDto;
         }

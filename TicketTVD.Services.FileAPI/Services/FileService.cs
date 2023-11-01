@@ -19,8 +19,8 @@ public class FileService
         _key = _configuration.GetValue<string>("AzureBlobStorage:Key");
         _containerName = _configuration.GetValue<string>("AzureBlobStorage:ContainerName");
         _connectionString = _configuration.GetValue<string>("AzureBlobStorage:ConnectionString");
-        
-        var credential =  new StorageSharedKeyCredential(_storageAccount, _key);
+
+        var credential = new StorageSharedKeyCredential(_storageAccount, _key);
         var blobUri = $"https://{_storageAccount}.blob.core.windows.net";
         var blobServiceClient = new BlobServiceClient(new Uri(blobUri), credential);
         _filesContainer = blobServiceClient.GetBlobContainerClient(_containerName);
@@ -35,7 +35,7 @@ public class FileService
             string uri = _filesContainer.Uri.ToString();
             var name = file.Name;
             var fullUri = $"{uri}/{name}";
-            
+
             files.Add(new BlobDto
             {
                 Uri = fullUri,
@@ -52,15 +52,25 @@ public class FileService
         BlobResponseDto response = new();
         BlobClient client = _filesContainer.GetBlobClient(blob.FileName);
 
-        await using (Stream? data = blob.OpenReadStream())
+        if (await client.ExistsAsync())
         {
-            await client.UploadAsync(data);
+            response.Status = $"File {blob.FileName} Uploaded Successfully";
+            response.Error = false;
+            response.Blob.Uri = client.Uri.AbsoluteUri;
+            response.Blob.Name = client.Name;
         }
+        else
+        {
+            await using (Stream? data = blob.OpenReadStream())
+            {
+                await client.UploadAsync(data);
+            }
 
-        response.Status = $"File {blob.FileName} Uploaded Successfully";
-        response.Error = false;
-        response.Blob.Uri = client.Uri.AbsoluteUri;
-        response.Blob.Name = client.Name;
+            response.Status = $"File {blob.FileName} Uploaded Successfully";
+            response.Error = false;
+            response.Blob.Uri = client.Uri.AbsoluteUri;
+            response.Blob.Name = client.Name;
+        }
 
         return response;
     }

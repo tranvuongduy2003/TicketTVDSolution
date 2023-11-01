@@ -34,9 +34,6 @@ public class TokenService : ITokenService
 
         claimList.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
         
-        if (applicationUser.Provider != null)
-            claimList.Add(new Claim(ClaimTypes.AuthenticationMethod, applicationUser.Provider.GetDisplayName()));
-        
         var token = new JwtSecurityToken(
             issuer: _jwtOptions.Issuer,
             audience: _jwtOptions.Audience,

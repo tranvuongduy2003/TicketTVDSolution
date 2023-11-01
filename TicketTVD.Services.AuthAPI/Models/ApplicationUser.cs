@@ -14,9 +14,6 @@ public class ApplicationUser : IdentityUser
     
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Status Status { get; set; } = Status.ACTIVE;
-    
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Provider? Provider { get; set; }
     public string? RefreshToken { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

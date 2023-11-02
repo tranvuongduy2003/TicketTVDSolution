@@ -40,7 +40,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-03-08T21:34:42Z"),
                 StartTime = DateTime.Parse("2024-08-21T06:23:35Z"),
                 EndTime = DateTime.Parse("2024-09-07T05:30:53Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 28,
                 PublishTime = DateTime.Parse("2024-03-22T14:56:35Z"),
@@ -56,7 +56,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/212x100.png/5fa2dd/ffffff",
                 Name = "Lucita Kite",
                 Description = "Excision of Left Brachial Vein, Percutaneous Endoscopic Approach, Diagnostic",
-                CategoryId = 1,
+                CategoryId = 2,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -69,7 +69,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-03-07T11:04:54Z"),
                 StartTime = DateTime.Parse("2024-10-14T22:43:05Z"),
                 EndTime = DateTime.Parse("2024-01-03T04:31:45Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
                 PublishTime = DateTime.Parse("2024-02-11T13:55:36Z"),
@@ -85,7 +85,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/183x100.png/ff4444/ffffff",
                 Name = "Edlin Doale",
                 Description = "Revision of Autologous Tissue Substitute in Chest Wall, External Approach",
-                CategoryId = 1,
+                CategoryId = 3,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -98,7 +98,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-04-08T15:19:37Z"),
                 StartTime = DateTime.Parse("2024-05-20T12:21:53Z"),
                 EndTime = DateTime.Parse("2024-02-06T11:19:20Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 76,
                 PublishTime = DateTime.Parse("2024-01-29T02:02:34Z"),
@@ -114,7 +114,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/119x100.png/ff4444/ffffff",
                 Name = "Maitilde Finlason",
                 Description = "Extirpation of Matter from Common Bile Duct, Open Approach",
-                CategoryId = 1,
+                CategoryId = 4,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -127,7 +127,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-09-03T06:58:54Z"),
                 StartTime = DateTime.Parse("2024-06-16T12:11:39Z"),
                 EndTime = DateTime.Parse("2024-10-24T18:48:52Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
                 PublishTime = DateTime.Parse("2024-09-07T13:49:20Z"),
@@ -143,7 +143,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/106x100.png/cc0000/ffffff",
                 Name = "Elisabet Pasmore",
                 Description = "Dilation of Left External Iliac Artery, Bifurcation, Percutaneous Endoscopic Approach",
-                CategoryId = 1,
+                CategoryId = 5,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -156,7 +156,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-02-19T11:22:45Z"),
                 StartTime = DateTime.Parse("2024-09-04T07:34:56Z"),
                 EndTime = DateTime.Parse("2024-01-31T17:29:19Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 93,
                 PublishTime = DateTime.Parse("2024-01-06T00:22:49Z"),
@@ -185,7 +185,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-02-18T01:38:29Z"),
                 StartTime = DateTime.Parse("2024-06-28T07:03:07Z"),
                 EndTime = DateTime.Parse("2024-08-21T20:57:10Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
                 PublishTime = DateTime.Parse("2024-01-18T07:55:19Z"),
@@ -201,7 +201,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/180x100.png/5fa2dd/ffffff",
                 Name = "Jorgan Donaghy",
                 Description = "Dilation of Upper Artery with Drug-eluting Intraluminal Device, Percutaneous Approach",
-                CategoryId = 1,
+                CategoryId = 2,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -214,7 +214,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-09-24T18:06:25Z"),
                 StartTime = DateTime.Parse("2024-08-28T02:34:47Z"),
                 EndTime = DateTime.Parse("2024-07-22T17:17:16Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 91,
                 PublishTime = DateTime.Parse("2024-02-21T03:02:23Z"),
@@ -230,7 +230,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/244x100.png/cc0000/ffffff",
                 Name = "Sonya Goddert",
                 Description = "Destruction of Right Shoulder Muscle, Open Approach",
-                CategoryId = 1,
+                CategoryId = 3,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -243,7 +243,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-06-10T17:39:01Z"),
                 StartTime = DateTime.Parse("2024-06-03T14:59:46Z"),
                 EndTime = DateTime.Parse("2024-04-17T07:47:24Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
                 PublishTime = DateTime.Parse("2023-11-25T18:32:36Z"),
@@ -259,7 +259,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/154x100.png/5fa2dd/ffffff",
                 Name = "Simone Noblett",
                 Description = "Bypass Cecum to Cutaneous with Nonautologous Tissue Substitute, Via Natural or Artificial Opening Endoscopic",
-                CategoryId = 1,
+                CategoryId = 4,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -272,7 +272,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-09-06T13:28:27Z"),
                 StartTime = DateTime.Parse("2024-03-16T08:07:18Z"),
                 EndTime = DateTime.Parse("2024-07-27T21:29:00Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 69,
                 PublishTime = DateTime.Parse("2024-09-14T18:50:13Z"),
@@ -288,7 +288,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/111x100.png/ff4444/ffffff",
                 Name = "Myrilla De Bruin",
                 Description = "Excision of Greater Omentum, Percutaneous Approach",
-                CategoryId = 1,
+                CategoryId = 5,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -301,7 +301,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-09-15T23:48:18Z"),
                 StartTime = DateTime.Parse("2024-06-03T20:40:45Z"),
                 EndTime = DateTime.Parse("2024-08-11T08:41:04Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
                 PublishTime = DateTime.Parse("2024-07-06T22:37:26Z"),
@@ -330,7 +330,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2024-09-07T18:26:11Z"),
                 StartTime = DateTime.Parse("2024-02-15T09:56:57Z"),
                 EndTime = DateTime.Parse("2024-03-18T04:42:16Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 81,
                 PublishTime = DateTime.Parse("2023-12-02T03:42:57Z"),
@@ -346,7 +346,7 @@ public class ApplicationDbContext : DbContext
                 CoverImage = "http://dummyimage.com/213x100.png/5fa2dd/ffffff",
                 Name = "Bradly Majury",
                 Description = "Resection of Perineum Tendon, Open Approach",
-                CategoryId = 1,
+                CategoryId = 2,
                 Album = new List<string>()
                 {
                     "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
@@ -359,7 +359,7 @@ public class ApplicationDbContext : DbContext
                 EventDate = DateTime.Parse("2023-12-23T23:28:53Z"),
                 StartTime = DateTime.Parse("2024-04-21T07:42:20Z"),
                 EndTime = DateTime.Parse("2024-01-26T05:43:53Z"),
-                CreatorId = "2fbf46fc-e8a2-4f05-af98-514f8115113e",
+                CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 95,
                 PublishTime = DateTime.Parse("2023-12-15T05:37:54Z"),

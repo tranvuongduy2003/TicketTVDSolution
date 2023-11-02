@@ -3,9 +3,6 @@ using TicketTVD.Services.EventAPI.Data;
 using TicketTVD.Services.EventAPI.Models;
 using TicketTVD.Services.EventAPI.Models.Dto;
 using TicketTVD.Services.EventAPI.Services.IServices;
-=======
-﻿using TicketTVD.Services.EventAPI.Services.IServices;
->>>>>>> origin/main
 
 namespace TicketTVD.Services.EventAPI.Services;
 

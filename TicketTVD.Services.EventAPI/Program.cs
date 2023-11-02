@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using TicketTVD.Services.EventAPI.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,12 +21,21 @@ IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<BackendApiAuthenticationHttpClientHandler>();
+
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IAlbumService, AlbumService>();
+builder.Services.AddHttpClient("TicketDetail",
+        u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:TicketAPI"]))
+    .AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>
@@ -64,10 +74,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "EVENT API");
-    });
+    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "EVENT API"); });
 }
 
 app.UseHttpsRedirection();

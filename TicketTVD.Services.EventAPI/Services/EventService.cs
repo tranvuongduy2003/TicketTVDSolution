@@ -11,12 +11,14 @@ public class EventService : IEventService
     private readonly ApplicationDbContext _db;
     private readonly IMapper _mapper;
     private readonly ITicketService _ticketService;
+    private readonly IAlbumService _albumService;
 
-    public EventService(ApplicationDbContext db, IMapper mapper, ITicketService ticketService)
+    public EventService(ApplicationDbContext db, IMapper mapper, ITicketService ticketService, IAlbumService albumService)
     {
         _db = db;
         _mapper = mapper;
         _ticketService = ticketService;
+        _albumService = albumService;
     }
     
     public async Task<IEnumerable<EventDto>> GetEvents()
@@ -31,6 +33,7 @@ public class EventService : IEventService
                 var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
                 eventDto.TicketPrice = ticketDetailDto.Price;
             }
+            
 
             return eventDtos;
         }
@@ -53,11 +56,14 @@ public class EventService : IEventService
             
             var eventDto = _mapper.Map<DetailEventDto>(eventFromDb);
             var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
+            var albums = await _albumService.GetAlbumsByEventId(eventDto.Id);
+            
             eventDto.TicketPrice = ticketDetailDto.Price;
             eventDto.TicketIsPaid = ticketDetailDto.IsPaid;
             eventDto.TicketQuantity = ticketDetailDto.Quantity;
             eventDto.TicketStartTime = ticketDetailDto.StartTime;
             eventDto.TicketCloseTime = ticketDetailDto.CloseTime;
+            eventDto.Album = albums.Select(a => a.Uri);
 
             return eventDto;
         }
@@ -86,6 +92,8 @@ public class EventService : IEventService
                 StartTime = createEventDto.TicketStartTime,
                 CloseTime = createEventDto.TicketCloseTime,
             });
+
+            await _albumService.AddImagesToAlbum(createdEvent.Entity.Id, createEventDto.Album);
             
             return true;
         }
@@ -111,7 +119,6 @@ public class EventService : IEventService
             eventFromDb.Description = updateEventDto.Description;
             eventFromDb.CategoryId = updateEventDto.CategoryId;
             eventFromDb.Status = updateEventDto.Status;
-            eventFromDb.Album = updateEventDto.Album;
             eventFromDb.Location = updateEventDto.Location;
             eventFromDb.EventDate = updateEventDto.EventDate;
             eventFromDb.IsPromotion = updateEventDto.IsPromotion;
@@ -129,6 +136,8 @@ public class EventService : IEventService
                 StartTime = updateEventDto.TicketStartTime,
                 CloseTime = updateEventDto.TicketCloseTime,
             });
+            
+            await _albumService.AddImagesToAlbum(eventId, updateEventDto.Album);
             
             await _db.SaveChangesAsync();
             

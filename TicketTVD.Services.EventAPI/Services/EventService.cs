@@ -114,8 +114,6 @@ public class EventService : IEventService
             eventFromDb.Album = updateEventDto.Album;
             eventFromDb.Location = updateEventDto.Location;
             eventFromDb.EventDate = updateEventDto.EventDate;
-            eventFromDb.StartTime = updateEventDto.StartTime;
-            eventFromDb.EndTime = updateEventDto.EndTime;
             eventFromDb.IsPromotion = updateEventDto.IsPromotion;
             eventFromDb.PromotionPlan = updateEventDto.PromotionPlan;
             eventFromDb.PublishTime = updateEventDto.PublishTime;

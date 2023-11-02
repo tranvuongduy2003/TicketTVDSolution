@@ -7,7 +7,7 @@ public class Ticket
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
-    public int TicketDetailsId { get; set; }
+    public int TicketDetailId { get; set; }
     public string TicketCode { get; set; }
     public string OwnerName { get; set; }
     public string OwnerEmail { get; set; }

@@ -11,7 +11,7 @@ public class EventDto
     public string Description { get; set; }
     public string Location { get; set; }
     public DateTime EventDate { get; set; }
-    public decimal Price { get; set; }
+    public decimal TicketPrice { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]
     public Status Status { get; set; }
     public DateTime CreatedAt { get; set; }

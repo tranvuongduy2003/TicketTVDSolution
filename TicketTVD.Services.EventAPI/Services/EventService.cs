@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
 using TicketTVD.Services.EventAPI.Data;
 using TicketTVD.Services.EventAPI.Models;
 using TicketTVD.Services.EventAPI.Models.Dto;
@@ -11,11 +10,13 @@ public class EventService : IEventService
 {
     private readonly ApplicationDbContext _db;
     private readonly IMapper _mapper;
+    private readonly ITicketService _ticketService;
 
-    public EventService(ApplicationDbContext db, IMapper mapper)
+    public EventService(ApplicationDbContext db, IMapper mapper, ITicketService ticketService)
     {
         _db = db;
         _mapper = mapper;
+        _ticketService = ticketService;
     }
     
     public async Task<IEnumerable<EventDto>> GetEvents()
@@ -24,6 +25,12 @@ public class EventService : IEventService
         {
             var events = _db.Events.ToList();
             var eventDtos = _mapper.Map<IEnumerable<EventDto>>(events);
+            
+            foreach (var eventDto in eventDtos)
+            {
+                var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
+                eventDto.TicketPrice = ticketDetailDto.Price;
+            }
 
             return eventDtos;
         }
@@ -45,6 +52,12 @@ public class EventService : IEventService
             }
             
             var eventDto = _mapper.Map<DetailEventDto>(eventFromDb);
+            var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
+            eventDto.TicketPrice = ticketDetailDto.Price;
+            eventDto.TicketIsPaid = ticketDetailDto.IsPaid;
+            eventDto.TicketQuantity = ticketDetailDto.Quantity;
+            eventDto.TicketStartTime = ticketDetailDto.StartTime;
+            eventDto.TicketCloseTime = ticketDetailDto.CloseTime;
 
             return eventDto;
         }
@@ -62,7 +75,17 @@ public class EventService : IEventService
             newEvent.CreatedAt = DateTime.Now;
             newEvent.UpdatedAt = DateTime.Now;
             
-            _db.Events.AddAsync(newEvent);
+            var createdEvent = await _db.Events.AddAsync(newEvent);
+
+            await _ticketService.CreateTicketDetail(new CreateTicketDetailDto
+            {
+                EventId = createdEvent.Entity.Id,
+                IsPaid = createEventDto.TicketIsPaid,
+                Price = createEventDto.TicketPrice ?? 0,
+                Quantity = createEventDto.TicketQuantity,
+                StartTime = createEventDto.TicketStartTime,
+                CloseTime = createEventDto.TicketCloseTime,
+            });
             
             return true;
         }
@@ -91,15 +114,23 @@ public class EventService : IEventService
             eventFromDb.Album = updateEventDto.Album;
             eventFromDb.Location = updateEventDto.Location;
             eventFromDb.EventDate = updateEventDto.EventDate;
-            eventFromDb.StartTime = updateEventDto.StartTime;
-            eventFromDb.EndTime = updateEventDto.EndTime;
             eventFromDb.IsPromotion = updateEventDto.IsPromotion;
             eventFromDb.PromotionPlan = updateEventDto.PromotionPlan;
             eventFromDb.PublishTime = updateEventDto.PublishTime;
             eventFromDb.CreatorId = updateEventDto.CreatorId;
             eventFromDb.UpdatedAt = DateTime.Now;
+
+            await _ticketService.UpdateTicketDetailByEventId(eventId, new CreateTicketDetailDto
+            {
+                EventId = eventId,
+                IsPaid = updateEventDto.TicketIsPaid,
+                Price = updateEventDto.TicketPrice ?? 0,
+                Quantity = updateEventDto.TicketQuantity,
+                StartTime = updateEventDto.TicketStartTime,
+                CloseTime = updateEventDto.TicketCloseTime,
+            });
             
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             
             return true;
         }

@@ -16,6 +16,13 @@ public class DetailEventDto
     public DateTime StartTime { get; set; }
     public DateTime EndTime { get; set; }
     public string CreatorId { get; set; }
+    
+    public bool TicketIsPaid { get; set; }
+    public int TicketQuantity { get; set; }
+    public decimal? TicketPrice { get; set; }
+    public DateTime TicketStartTime { get; set; }
+    public DateTime TicketCloseTime { get; set; }
+    
     public Boolean IsPromotion { get; set; }
     public int PromotionPlan { get; set; }
     public DateTime PublishTime { get; set; }

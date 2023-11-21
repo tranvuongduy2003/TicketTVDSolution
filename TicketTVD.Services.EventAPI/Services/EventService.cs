@@ -2,6 +2,7 @@
 using TicketTVD.Services.EventAPI.Data;
 using TicketTVD.Services.EventAPI.Models;
 using TicketTVD.Services.EventAPI.Models.Dto;
+using TicketTVD.Services.EventAPI.Models.Enum;
 using TicketTVD.Services.EventAPI.Services.IServices;
 
 namespace TicketTVD.Services.EventAPI.Services;
@@ -32,6 +33,32 @@ public class EventService : IEventService
             {
                 var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
                 eventDto.TicketPrice = ticketDetailDto.Price;
+                eventDto.TicketQuantity = ticketDetailDto.Quantity;
+                eventDto.TicketSoldQuantity = 0;
+            }
+            
+
+            return eventDtos;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<IEnumerable<EventDto>> GetEventsByOrganizerId(string organizerId)
+    {
+        try
+        {
+            var events = _db.Events.Where(e => e.CreatorId == organizerId).ToList();
+            var eventDtos = _mapper.Map<IEnumerable<EventDto>>(events);
+            
+            foreach (var eventDto in eventDtos)
+            {
+                var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
+                eventDto.TicketPrice = ticketDetailDto.Price;
+                eventDto.TicketQuantity = ticketDetailDto.Quantity;
+                eventDto.TicketSoldQuantity = 0;
             }
             
 
@@ -78,10 +105,29 @@ public class EventService : IEventService
         try
         {
             var newEvent = _mapper.Map<Event>(createEventDto);
+
+            if (newEvent.EventDate > DateTime.Now)
+            {
+                newEvent.Status = Status.UPCOMING;
+            }
+            else if (newEvent.EventDate.Year == DateTime.Now.Year && newEvent.EventDate.Month == DateTime.Now.Month &&
+                     newEvent.EventDate.Day == DateTime.Now.Month)
+            {
+                newEvent.Status = Status.OPENING;
+            }
+            else
+            {
+                newEvent.Status = Status.CLOSED;
+            }
+
+            newEvent.Favourite = 0;
+            newEvent.Share = 0;
+            
             newEvent.CreatedAt = DateTime.Now;
             newEvent.UpdatedAt = DateTime.Now;
             
             var createdEvent = await _db.Events.AddAsync(newEvent);
+            await _db.SaveChangesAsync();
 
             await _ticketService.CreateTicketDetail(new CreateTicketDetailDto
             {

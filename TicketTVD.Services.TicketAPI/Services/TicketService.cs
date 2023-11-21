@@ -116,7 +116,8 @@ public class TicketService : ITicketService
         {
             var newTicketDetail = _mapper.Map<TicketDetail>(createTicketDetailDto);
             
-            _db.TicketDetails.AddAsync(newTicketDetail);
+            await _db.TicketDetails.AddAsync(newTicketDetail);
+            await _db.SaveChangesAsync();
             
             return true;
         }

@@ -37,6 +37,29 @@ namespace TicketTVD.Services.EventAPI.Controllers
 
             return Ok(_response);
         }
+        
+        [Authorize]
+        [Authorize(Roles = "ORGANIZER")]
+        [HttpGet]
+        [Route("{organizerId}")]
+        public async Task<IActionResult> GetEventsByOrganizerId(string organizerId)
+        {
+            try
+            {
+                var eventDtos = await _eventService.GetEventsByOrganizerId(organizerId);
+
+                _response.Data = eventDtos;
+                _response.Message = "Get events successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
 
         [HttpGet]
         [Route("{id:int}")]

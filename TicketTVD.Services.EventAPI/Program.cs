@@ -10,12 +10,17 @@ using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using TicketTVD.Services.EventAPI.Utility;
 
+var EventCors = "EventCors";
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddCors(p =>
+    p.AddPolicy(EventCors, build => { build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader(); }));
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -78,6 +83,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(EventCors);
 
 app.UseAuthentication();
 app.UseAuthorization();

@@ -33,6 +33,9 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsPaid")
+                        .HasColumnType("bit");
+
                     b.Property<string>("OwnerEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -49,7 +52,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("TicketCode")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TicketDetailId")
@@ -82,9 +84,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                     b.Property<int>("EventId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("bit");
-
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -104,7 +103,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 1,
                             CloseTime = new DateTime(2023, 9, 20, 19, 23, 30, 0, DateTimeKind.Local),
                             EventId = 1,
-                            IsPaid = false,
                             Price = 0m,
                             Quantity = 161,
                             StartTime = new DateTime(2022, 12, 13, 12, 9, 52, 0, DateTimeKind.Local)
@@ -114,7 +112,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 2,
                             CloseTime = new DateTime(2023, 7, 29, 1, 42, 35, 0, DateTimeKind.Local),
                             EventId = 2,
-                            IsPaid = false,
                             Price = 0m,
                             Quantity = 79,
                             StartTime = new DateTime(2023, 2, 23, 10, 24, 1, 0, DateTimeKind.Local)
@@ -124,7 +121,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 3,
                             CloseTime = new DateTime(2023, 8, 14, 9, 28, 45, 0, DateTimeKind.Local),
                             EventId = 3,
-                            IsPaid = true,
                             Price = 4221000m,
                             Quantity = 103,
                             StartTime = new DateTime(2023, 2, 13, 2, 1, 46, 0, DateTimeKind.Local)
@@ -134,7 +130,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 4,
                             CloseTime = new DateTime(2023, 5, 14, 8, 10, 46, 0, DateTimeKind.Local),
                             EventId = 4,
-                            IsPaid = false,
                             Price = 0m,
                             Quantity = 30,
                             StartTime = new DateTime(2023, 3, 25, 21, 47, 16, 0, DateTimeKind.Local)
@@ -144,7 +139,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 5,
                             CloseTime = new DateTime(2023, 5, 27, 17, 21, 44, 0, DateTimeKind.Local),
                             EventId = 5,
-                            IsPaid = true,
                             Price = 4684000m,
                             Quantity = 13,
                             StartTime = new DateTime(2023, 1, 16, 17, 17, 12, 0, DateTimeKind.Local)
@@ -154,7 +148,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 6,
                             CloseTime = new DateTime(2023, 5, 16, 0, 12, 2, 0, DateTimeKind.Local),
                             EventId = 6,
-                            IsPaid = true,
                             Price = 8166000m,
                             Quantity = 61,
                             StartTime = new DateTime(2023, 5, 7, 16, 36, 28, 0, DateTimeKind.Local)
@@ -164,7 +157,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 7,
                             CloseTime = new DateTime(2023, 7, 18, 13, 7, 55, 0, DateTimeKind.Local),
                             EventId = 7,
-                            IsPaid = false,
                             Price = 0m,
                             Quantity = 196,
                             StartTime = new DateTime(2022, 12, 6, 11, 4, 2, 0, DateTimeKind.Local)
@@ -174,7 +166,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 8,
                             CloseTime = new DateTime(2023, 8, 20, 22, 51, 14, 0, DateTimeKind.Local),
                             EventId = 8,
-                            IsPaid = false,
                             Price = 0m,
                             Quantity = 51,
                             StartTime = new DateTime(2023, 1, 10, 3, 21, 3, 0, DateTimeKind.Local)
@@ -184,7 +175,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 9,
                             CloseTime = new DateTime(2023, 8, 16, 14, 51, 26, 0, DateTimeKind.Local),
                             EventId = 9,
-                            IsPaid = false,
                             Price = 0m,
                             Quantity = 8,
                             StartTime = new DateTime(2023, 6, 21, 23, 29, 58, 0, DateTimeKind.Local)
@@ -194,7 +184,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 10,
                             CloseTime = new DateTime(2023, 10, 27, 19, 37, 21, 0, DateTimeKind.Local),
                             EventId = 10,
-                            IsPaid = false,
                             Price = 0m,
                             Quantity = 20,
                             StartTime = new DateTime(2023, 5, 30, 18, 15, 6, 0, DateTimeKind.Local)
@@ -204,7 +193,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 11,
                             CloseTime = new DateTime(2023, 8, 22, 4, 27, 24, 0, DateTimeKind.Local),
                             EventId = 11,
-                            IsPaid = false,
                             Price = 0m,
                             Quantity = 130,
                             StartTime = new DateTime(2023, 8, 2, 17, 0, 3, 0, DateTimeKind.Local)
@@ -214,7 +202,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             Id = 12,
                             CloseTime = new DateTime(2023, 1, 28, 1, 21, 17, 0, DateTimeKind.Local),
                             EventId = 12,
-                            IsPaid = true,
                             Price = 9620000m,
                             Quantity = 15,
                             StartTime = new DateTime(2023, 1, 10, 20, 2, 29, 0, DateTimeKind.Local)

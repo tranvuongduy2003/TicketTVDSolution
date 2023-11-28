@@ -430,6 +430,9 @@ namespace TicketTVD.Services.EventAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime>("EventDate")
                         .HasColumnType("datetime2");
 
@@ -450,11 +453,14 @@ namespace TicketTVD.Services.EventAPI.Migrations
                     b.Property<int?>("PromotionPlan")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PublishTime")
+                    b.Property<DateTime?>("PublishTime")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Share")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -472,9 +478,10 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             Id = 1,
                             CategoryId = 1,
                             CoverImage = "http://dummyimage.com/146x100.png/dddddd/000000",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5845),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7829),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Drainage of Cerebellum with Drainage Device, Open Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7817),
                             EventDate = new DateTime(2022, 12, 13, 12, 9, 52, 0, DateTimeKind.Local),
                             Favourite = 110,
                             IsPromotion = true,
@@ -483,17 +490,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 28,
                             PublishTime = new DateTime(2024, 3, 22, 21, 56, 35, 0, DateTimeKind.Local),
                             Share = 279,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7805),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5855)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7830)
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 2,
                             CoverImage = "http://dummyimage.com/212x100.png/5fa2dd/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5867),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7843),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Excision of Left Brachial Vein, Percutaneous Endoscopic Approach, Diagnostic",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7839),
                             EventDate = new DateTime(2023, 2, 23, 10, 24, 1, 0, DateTimeKind.Local),
                             Favourite = 113,
                             IsPromotion = false,
@@ -502,17 +511,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 0,
                             PublishTime = new DateTime(2024, 2, 11, 20, 55, 36, 0, DateTimeKind.Local),
                             Share = 287,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7838),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5867)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7844)
                         },
                         new
                         {
                             Id = 3,
                             CategoryId = 3,
                             CoverImage = "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5879),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7853),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Revision of Autologous Tissue Substitute in Chest Wall, External Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7849),
                             EventDate = new DateTime(2023, 2, 13, 2, 1, 46, 0, DateTimeKind.Local),
                             Favourite = 257,
                             IsPromotion = true,
@@ -521,17 +532,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 76,
                             PublishTime = new DateTime(2024, 1, 29, 9, 2, 34, 0, DateTimeKind.Local),
                             Share = 297,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7848),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5880)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7854)
                         },
                         new
                         {
                             Id = 4,
                             CategoryId = 4,
                             CoverImage = "http://dummyimage.com/119x100.png/ff4444/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5889),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7863),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Extirpation of Matter from Common Bile Duct, Open Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7859),
                             EventDate = new DateTime(2023, 3, 25, 21, 47, 16, 0, DateTimeKind.Local),
                             Favourite = 8,
                             IsPromotion = false,
@@ -540,17 +553,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 0,
                             PublishTime = new DateTime(2024, 9, 7, 20, 49, 20, 0, DateTimeKind.Local),
                             Share = 111,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7858),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5889)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7863)
                         },
                         new
                         {
                             Id = 5,
                             CategoryId = 5,
                             CoverImage = "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5899),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7873),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Dilation of Left External Iliac Artery, Bifurcation, Percutaneous Endoscopic Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7869),
                             EventDate = new DateTime(2023, 1, 16, 17, 17, 12, 0, DateTimeKind.Local),
                             Favourite = 35,
                             IsPromotion = true,
@@ -559,17 +574,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 93,
                             PublishTime = new DateTime(2024, 1, 6, 7, 22, 49, 0, DateTimeKind.Local),
                             Share = 124,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7868),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5899)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7873)
                         },
                         new
                         {
                             Id = 6,
                             CategoryId = 1,
                             CoverImage = "http://dummyimage.com/169x100.png/dddddd/000000",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5907),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7882),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Immobilization of Right Lower Leg using Brace",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7878),
                             EventDate = new DateTime(2023, 5, 7, 16, 36, 28, 0, DateTimeKind.Local),
                             Favourite = 273,
                             IsPromotion = false,
@@ -578,17 +595,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 0,
                             PublishTime = new DateTime(2024, 1, 18, 14, 55, 19, 0, DateTimeKind.Local),
                             Share = 124,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7878),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5907)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7883)
                         },
                         new
                         {
                             Id = 7,
                             CategoryId = 2,
                             CoverImage = "http://dummyimage.com/180x100.png/5fa2dd/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5915),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7892),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Dilation of Upper Artery with Drug-eluting Intraluminal Device, Percutaneous Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7888),
                             EventDate = new DateTime(2022, 12, 6, 11, 4, 2, 0, DateTimeKind.Local),
                             Favourite = 261,
                             IsPromotion = false,
@@ -597,17 +616,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 91,
                             PublishTime = new DateTime(2024, 2, 21, 10, 2, 23, 0, DateTimeKind.Local),
                             Share = 10,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7888),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5916)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7892)
                         },
                         new
                         {
                             Id = 8,
                             CategoryId = 3,
                             CoverImage = "http://dummyimage.com/244x100.png/cc0000/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5924),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7900),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Destruction of Right Shoulder Muscle, Open Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7897),
                             EventDate = new DateTime(2023, 1, 10, 3, 21, 3, 0, DateTimeKind.Local),
                             Favourite = 16,
                             IsPromotion = false,
@@ -616,17 +637,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 0,
                             PublishTime = new DateTime(2023, 11, 26, 1, 32, 36, 0, DateTimeKind.Local),
                             Share = 66,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7896),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5925)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7901)
                         },
                         new
                         {
                             Id = 9,
                             CategoryId = 4,
                             CoverImage = "http://dummyimage.com/154x100.png/5fa2dd/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5932),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7910),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Bypass Cecum to Cutaneous with Nonautologous Tissue Substitute, Via Natural or Artificial Opening Endoscopic",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7906),
                             EventDate = new DateTime(2023, 6, 21, 23, 29, 58, 0, DateTimeKind.Local),
                             Favourite = 6,
                             IsPromotion = true,
@@ -635,17 +658,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 69,
                             PublishTime = new DateTime(2024, 9, 15, 1, 50, 13, 0, DateTimeKind.Local),
                             Share = 113,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7905),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5933)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7910)
                         },
                         new
                         {
                             Id = 10,
                             CategoryId = 5,
                             CoverImage = "http://dummyimage.com/111x100.png/ff4444/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5940),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7918),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Excision of Greater Omentum, Percutaneous Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7915),
                             EventDate = new DateTime(2023, 5, 30, 18, 15, 6, 0, DateTimeKind.Local),
                             Favourite = 186,
                             IsPromotion = false,
@@ -654,17 +679,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 0,
                             PublishTime = new DateTime(2024, 7, 7, 5, 37, 26, 0, DateTimeKind.Local),
                             Share = 193,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7914),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5941)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7919)
                         },
                         new
                         {
                             Id = 11,
                             CategoryId = 1,
                             CoverImage = "http://dummyimage.com/148x100.png/5fa2dd/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5948),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(8001),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Supplement Left Foot Vein with Nonautologous Tissue Substitute, Open Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7997),
                             EventDate = new DateTime(2023, 8, 2, 17, 0, 3, 0, DateTimeKind.Local),
                             Favourite = 287,
                             IsPromotion = true,
@@ -673,17 +700,19 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 81,
                             PublishTime = new DateTime(2023, 12, 2, 10, 42, 57, 0, DateTimeKind.Local),
                             Share = 193,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(7996),
                             Status = 0,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5949)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(8002)
                         },
                         new
                         {
                             Id = 12,
                             CategoryId = 2,
                             CoverImage = "http://dummyimage.com/213x100.png/5fa2dd/ffffff",
-                            CreatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5956),
+                            CreatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(8012),
                             CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                             Description = "Resection of Perineum Tendon, Open Approach",
+                            EndTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(8007),
                             EventDate = new DateTime(2023, 1, 10, 20, 2, 29, 0, DateTimeKind.Local),
                             Favourite = 146,
                             IsPromotion = true,
@@ -692,8 +721,9 @@ namespace TicketTVD.Services.EventAPI.Migrations
                             PromotionPlan = 95,
                             PublishTime = new DateTime(2023, 12, 15, 12, 37, 54, 0, DateTimeKind.Local),
                             Share = 217,
+                            StartTime = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(8007),
                             Status = 1,
-                            UpdatedAt = new DateTime(2023, 11, 21, 11, 4, 44, 526, DateTimeKind.Local).AddTicks(5957)
+                            UpdatedAt = new DateTime(2023, 11, 23, 16, 55, 55, 935, DateTimeKind.Local).AddTicks(8012)
                         });
                 });
 #pragma warning restore 612, 618

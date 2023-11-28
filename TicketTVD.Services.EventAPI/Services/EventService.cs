@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TicketTVD.Services.EventAPI.Data;
 using TicketTVD.Services.EventAPI.Models;
 using TicketTVD.Services.EventAPI.Models.Dto;
@@ -22,11 +23,59 @@ public class EventService : IEventService
         _albumService = albumService;
     }
     
-    public async Task<IEnumerable<EventDto>> GetEvents()
+    public async Task<IEnumerable<EventDto>> GetEvents(string? search)
     {
         try
         {
-            var events = _db.Events.ToList();
+            var events = new List<Event>();
+            if (search != null && search != "")
+            {
+                events = _db.Events.Where(e => e.Name.ToLower().Contains(search.ToLower())).ToList();
+            }
+            else
+            {
+                events = _db.Events.ToList();
+            }
+            
+            var eventDtos = _mapper.Map<IEnumerable<EventDto>>(events);
+            
+            foreach (var eventDto in eventDtos)
+            {
+                var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
+                eventDto.TicketPrice = ticketDetailDto.Price;
+                eventDto.TicketQuantity = ticketDetailDto.Quantity;
+                eventDto.TicketSoldQuantity = 0;
+            }
+            
+
+            return eventDtos;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<IEnumerable<EventDto>> GetEventsByTickets(EventsByTicketsDto eventsByTicketsDto)
+    {
+        try
+        {
+            var events = new List<Event>();
+            if (eventsByTicketsDto.Search != null && eventsByTicketsDto.Search != "")
+            {
+                // events = _db.Events .Where(e => e.Name.ToLower().Contains(eventsByTicketsDto.Search.ToLower())).ToList();
+                events = (from e in _db.Events
+                    join id in eventsByTicketsDto.EventIds on e.Id equals id
+                    where e.Name.ToLower().Contains(eventsByTicketsDto.Search.ToLower())
+                    select e).ToList();
+            }
+            else
+            {
+                events = (from e in _db.Events
+                    join id in eventsByTicketsDto.EventIds on e.Id equals id
+                    select e).ToList();
+            }
+            
             var eventDtos = _mapper.Map<IEnumerable<EventDto>>(events);
             
             foreach (var eventDto in eventDtos)
@@ -82,6 +131,12 @@ public class EventService : IEventService
             }
             
             var eventDto = _mapper.Map<DetailEventDto>(eventFromDb);
+
+            if (eventFromDb.PublishTime == null)
+            {
+                eventDto.PublishTime = null;
+            } 
+            
             var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
             var albums = await _albumService.GetAlbumsByEventId(eventDto.Id);
             
@@ -120,6 +175,11 @@ public class EventService : IEventService
                 newEvent.Status = Status.CLOSED;
             }
 
+            if (createEventDto.PublishTime != null)
+            {
+                newEvent.PublishTime = createEventDto.PublishTime;
+            }
+
             newEvent.Favourite = 0;
             newEvent.Share = 0;
             
@@ -127,6 +187,8 @@ public class EventService : IEventService
             newEvent.UpdatedAt = DateTime.Now;
             
             var createdEvent = await _db.Events.AddAsync(newEvent);
+            
+            
             await _db.SaveChangesAsync();
 
             await _ticketService.CreateTicketDetail(new CreateTicketDetailDto
@@ -164,13 +226,30 @@ public class EventService : IEventService
             eventFromDb.Name = updateEventDto.Name;
             eventFromDb.Description = updateEventDto.Description;
             eventFromDb.CategoryId = updateEventDto.CategoryId;
-            eventFromDb.Status = updateEventDto.Status;
             eventFromDb.Location = updateEventDto.Location;
             eventFromDb.EventDate = updateEventDto.EventDate;
             eventFromDb.IsPromotion = updateEventDto.IsPromotion;
             eventFromDb.PromotionPlan = updateEventDto.PromotionPlan;
-            eventFromDb.PublishTime = updateEventDto.PublishTime;
-            eventFromDb.CreatorId = updateEventDto.CreatorId;
+            
+            if (updateEventDto.PublishTime != null)
+            {
+                eventFromDb.PublishTime = updateEventDto.PublishTime;
+            }
+            
+            if (eventFromDb.EventDate > DateTime.Now)
+            {
+                eventFromDb.Status = Status.UPCOMING;
+            }
+            else if (eventFromDb.EventDate.Year == DateTime.Now.Year && eventFromDb.EventDate.Month == DateTime.Now.Month &&
+                     eventFromDb.EventDate.Day == DateTime.Now.Month)
+            {
+                eventFromDb.Status = Status.OPENING;
+            }
+            else
+            {
+                eventFromDb.Status = Status.CLOSED;
+            }
+            
             eventFromDb.UpdatedAt = DateTime.Now;
 
             await _ticketService.UpdateTicketDetailByEventId(eventId, new CreateTicketDetailDto
@@ -182,6 +261,8 @@ public class EventService : IEventService
                 StartTime = updateEventDto.TicketStartTime,
                 CloseTime = updateEventDto.TicketCloseTime,
             });
+
+            await _albumService.RemoveImagesFromAlbum(eventFromDb.Id);
             
             await _albumService.AddImagesToAlbum(eventId, updateEventDto.Album);
             
@@ -207,6 +288,100 @@ public class EventService : IEventService
             }
 
             _db.Events.Remove(eventFromDb);
+            _db.SaveChanges();
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<bool> IncreaseFavourite(int id)
+    {
+        try
+        {
+            var eventFromDb = _db.Events.FirstOrDefault(u => u.Id == id);
+
+            if (eventFromDb is null)
+            {
+                return false;
+            }
+
+            eventFromDb.Favourite++;
+            _db.SaveChanges();
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<bool> DecreaseFavourite(int id)
+    {
+        try
+        {
+            var eventFromDb = _db.Events.FirstOrDefault(u => u.Id == id);
+
+            if (eventFromDb is null)
+            {
+                return false;
+            }
+
+            if (eventFromDb.Favourite > 0)
+            {
+                eventFromDb.Favourite--;
+            }
+            _db.SaveChanges();
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<bool> IncreaseShare(int id)
+    {
+        try
+        {
+            var eventFromDb = _db.Events.FirstOrDefault(u => u.Id == id);
+
+            if (eventFromDb is null)
+            {
+                return false;
+            }
+
+            eventFromDb.Share++;
+            _db.SaveChanges();
+            
+            return true;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<bool> DecreaseShare(int id)
+    {
+        try
+        {
+            var eventFromDb = _db.Events.FirstOrDefault(u => u.Id == id);
+
+            if (eventFromDb is null)
+            {
+                return false;
+            }
+
+            if (eventFromDb.Share > 0)
+            {
+                eventFromDb.Share--;
+            }
             _db.SaveChanges();
             
             return true;

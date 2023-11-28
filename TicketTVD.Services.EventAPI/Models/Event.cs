@@ -16,10 +16,12 @@ public class Event
     public int CategoryId { get; set; }
     public string Location { get; set; }
     public DateTime EventDate { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
     public string CreatorId { get; set; }
     public bool IsPromotion { get; set; }
     public int? PromotionPlan { get; set; }
-    public DateTime PublishTime { get; set; }
+    public DateTime? PublishTime { get; set; } = null;
     public int Favourite { get; set; }
     public int Share { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]

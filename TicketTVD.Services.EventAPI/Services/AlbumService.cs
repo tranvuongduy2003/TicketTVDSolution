@@ -61,6 +61,8 @@ public class AlbumService : IAlbumService
                 Uri = i
             }));
 
+            await _db.SaveChangesAsync();
+            
             return true;
         }
         catch (Exception ex)
@@ -76,6 +78,8 @@ public class AlbumService : IAlbumService
             var albums = _db.Albums.Where(a => a.EventId == eventId).ToList();
             
             _db.Albums.RemoveRange(albums);
+
+            await _db.SaveChangesAsync();
             
             return true;
         }

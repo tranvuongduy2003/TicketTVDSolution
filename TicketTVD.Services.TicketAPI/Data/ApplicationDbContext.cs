@@ -25,7 +25,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 1,
                 EventId = 1,
-                IsPaid = false,
                 Quantity = 161,
                 Price = 0,
                 StartTime = DateTime.Parse("2022-12-13T05:09:52Z"),
@@ -35,7 +34,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 2,
                 EventId = 2,
-                IsPaid = false,
                 Quantity = 79,
                 Price = 0,
                 StartTime = DateTime.Parse("2023-02-23T03:24:01Z"),
@@ -45,7 +43,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 3,
                 EventId = 3,
-                IsPaid = true,
                 Quantity = 103,
                 Price = 4221000,
                 StartTime = DateTime.Parse("2023-02-12T19:01:46Z"),
@@ -55,7 +52,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 4,
                 EventId = 4,
-                IsPaid = false,
                 Quantity = 30,
                 Price = 0,
                 StartTime = DateTime.Parse("2023-03-25T14:47:16Z"),
@@ -65,7 +61,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 5,
                 EventId = 5,
-                IsPaid = true,
                 Quantity = 13,
                 Price = 4684000,
                 StartTime = DateTime.Parse("2023-01-16T10:17:12Z"),
@@ -75,7 +70,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 6,
                 EventId = 6,
-                IsPaid = true,
                 Quantity = 61,
                 Price = 8166000,
                 StartTime = DateTime.Parse("2023-05-07T09:36:28Z"),
@@ -85,7 +79,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 7,
                 EventId = 7,
-                IsPaid = false,
                 Quantity = 196,
                 Price = 0,
                 StartTime = DateTime.Parse("2022-12-06T04:04:02Z"),
@@ -95,7 +88,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 8,
                 EventId = 8,
-                IsPaid = false,
                 Quantity = 51,
                 Price = 0,
                 StartTime = DateTime.Parse("2023-01-09T20:21:03Z"),
@@ -105,7 +97,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 9,
                 EventId = 9,
-                IsPaid = false,
                 Quantity = 8,
                 Price = 0,
                 StartTime = DateTime.Parse("2023-06-21T16:29:58Z"),
@@ -115,7 +106,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 10,
                 EventId = 10,
-                IsPaid = false,
                 Quantity = 20,
                 Price = 0,
                 StartTime = DateTime.Parse("2023-05-30T11:15:06Z"),
@@ -125,7 +115,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 11,
                 EventId = 11,
-                IsPaid = false,
                 Quantity = 130,
                 Price = 0,
                 StartTime = DateTime.Parse("2023-08-02T10:00:03Z"),
@@ -135,7 +124,6 @@ public class ApplicationDbContext : DbContext
             {
                 Id = 12,
                 EventId = 12,
-                IsPaid = true,
                 Quantity = 15,
                 Price = 9620000,
                 StartTime = DateTime.Parse("2023-01-10T13:02:29Z"),

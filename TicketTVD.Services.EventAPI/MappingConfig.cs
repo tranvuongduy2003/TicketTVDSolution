@@ -10,10 +10,11 @@ public class MappingConfig
     {
         var mappingConfig = new MapperConfiguration(config =>
         {
-            config.CreateMap<Event, EventDto>();
+            config.CreateMap<Event, EventDto>().ForMember(edto => edto.CreatorId, e => e.MapFrom(src => src.CreatorId));
             config.CreateMap<DetailEventDto, Event>().ReverseMap();
             config.CreateMap<CreateEventDto, Event>();
             config.CreateMap<UpdateEventDto, Event>();
+            config.CreateMap<AlbumDto, Album>().ReverseMap();
         });
         return mappingConfig;
     }

@@ -28,9 +28,5 @@ public class UpdateEventDto
     public Boolean IsPromotion { get; set; }
     public int? PromotionPlan { get; set; }
     
-    public DateTime PublishTime { get; set; }
-    
-    public string CreatorId { get; set; }
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Status Status { get; set; }
+    public DateTime? PublishTime { get; set; }
 }

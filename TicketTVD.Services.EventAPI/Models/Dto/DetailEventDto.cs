@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using TicketTVD.Services.EventAPI.Models.Enum;
 
 namespace TicketTVD.Services.EventAPI.Models.Dto;
@@ -25,7 +26,7 @@ public class DetailEventDto
     
     public Boolean IsPromotion { get; set; }
     public int PromotionPlan { get; set; }
-    public DateTime PublishTime { get; set; }
+    public DateTime? PublishTime { get; set; }
     public int Favourite { get; set; }
     public int Share { get; set; }
     [JsonConverter(typeof(JsonStringEnumConverter))]

@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using TicketTVD.Services.EventAPI.Models.Enum;
 
 namespace TicketTVD.Services.EventAPI.Models.Dto;
@@ -19,16 +20,14 @@ public class CreateEventDto
     
     public bool TicketIsPaid { get; set; }
     public int TicketQuantity { get; set; }
-    public decimal? TicketPrice { get; set; }
+    public decimal? TicketPrice { get; set; } = 0;
     public DateTime TicketStartTime { get; set; }
     public DateTime TicketCloseTime { get; set; }
     
     public Boolean IsPromotion { get; set; }
-    public int? PromotionPlan { get; set; }
-    
-    public DateTime PublishTime { get; set; }
+    public int? PromotionPlan { get; set; } = 0;
+
+    public DateTime? PublishTime { get; set; } = null;
     
     public string CreatorId { get; set; }
-    [JsonConverter(typeof(JsonStringEnumConverter))]
-    public Status Status { get; set; }
 }

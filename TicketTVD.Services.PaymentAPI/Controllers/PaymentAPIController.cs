@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Stripe.Checkout;
 using TicketTVD.Services.PaymentAPI.Models.Dto;
 using Stripe;
+using TicketTVD.MessageBus;
 using TicketTVD.Services.PaymentAPI.Data;
 using TicketTVD.Services.PaymentAPI.Models;
 using TicketTVD.Services.PaymentAPI.Models.Enum;
@@ -15,22 +16,27 @@ namespace TicketTVD.Services.PaymentAPI.Controllers
     [ApiController]
     public class PaymentAPIController : ControllerBase
     {
+        private readonly IMessageBus _messageBus;
         private readonly ITicketService _ticketService;
         private readonly IEventService _eventService;
         private readonly ApplicationDbContext _db;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
         protected ResponseDto _response;
 
-        public PaymentAPIController(ITicketService ticketService, IEventService eventService, ApplicationDbContext db,
-            IMapper mapper)
+        public PaymentAPIController(IMessageBus messageBus, ITicketService ticketService, IEventService eventService,
+            ApplicationDbContext db,
+            IMapper mapper, IConfiguration configuration)
         {
+            _messageBus = messageBus;
             _ticketService = ticketService;
             _eventService = eventService;
             _db = db;
             _mapper = mapper;
+            _configuration = configuration;
             _response = new();
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetPayments()
         {
@@ -206,6 +212,18 @@ namespace TicketTVD.Services.PaymentAPI.Controllers
                     var tickets = await _ticketService.ValidateTickets(paymentId, true);
                     paymentDto = _mapper.Map<PaymentDto>(payment);
                     paymentDto.Tickets = tickets;
+
+                    await _messageBus.PublishMessage(new ValidateStripeResponseDto
+                        {
+                            Quantity = paymentDto.Quantity,
+                            TotalPrice = paymentDto.TotalPrice,
+                            Discount = paymentDto.Discount,
+                            CustomerName = paymentDto.CustomerName,
+                            CustomerEmail = paymentDto.CustomerEmail,
+                            CustomerPhone = paymentDto.CustomerPhone,
+                            Tickets = paymentDto.Tickets,
+                        },
+                        _configuration.GetValue<string>("TopicAndQueueNames:EmailTicketQueue"));
                 }
                 else
                 {

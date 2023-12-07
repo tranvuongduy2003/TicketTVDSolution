@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TicketTVD.MessageBus;
 using TicketTVD.Services.AuthAPI;
 using TicketTVD.Services.AuthAPI.Data;
 using TicketTVD.Services.AuthAPI.Extensions;
@@ -42,6 +43,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IMessageBus, MessageBus>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

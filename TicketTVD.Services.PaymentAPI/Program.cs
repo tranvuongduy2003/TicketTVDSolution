@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using TicketTVD.MessageBus;
 using TicketTVD.Services.PaymentAPI.Services;
 using TicketTVD.Services.PaymentAPI.Services.IServices;
 using TicketTVD.Services.PaymentAPI.Utility;
@@ -41,7 +42,7 @@ builder.Services.AddHttpClient("Event",
         u => u.BaseAddress = new Uri(builder.Configuration["ServiceUrls:EventAPI"]))
     .AddHttpMessageHandler<BackendApiAuthenticationHttpClientHandler>();
 builder.Services.AddScoped<IEventService, EventService>();
-
+builder.Services.AddScoped<IMessageBus, MessageBus>();
 builder.Services.AddScoped<ITicketService, TicketService>();
 
 builder.Services.AddEndpointsApiExplorer();

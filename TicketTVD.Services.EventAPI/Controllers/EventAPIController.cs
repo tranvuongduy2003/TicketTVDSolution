@@ -38,6 +38,26 @@ namespace TicketTVD.Services.EventAPI.Controllers
             return Ok(_response);
         }
         
+        [HttpGet("statistic-by-category")]
+        public async Task<IActionResult> GetEventsStatisticByCategory()
+        {
+            try
+            {
+                var eventDtos = await _eventService.GetEventsStatisticByCategory();
+
+                _response.Data = eventDtos;
+                _response.Message = "Get events successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+        
         [HttpPost]
         [Route("/get-events-by-tickets")]
         public async Task<IActionResult> GetEventsByTickets([FromBody] EventsByTicketsDto eventsByTicketsDto)

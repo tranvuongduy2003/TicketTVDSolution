@@ -1,10 +1,12 @@
-﻿using TicketTVD.Services.EventAPI.Models.Dto;
+﻿using TicketTVD.Services.EventAPI.Models;
+using TicketTVD.Services.EventAPI.Models.Dto;
 
 namespace TicketTVD.Services.EventAPI.Services.IServices;
 
 public interface IEventService
 {
     Task<IEnumerable<EventDto>> GetEvents(string? search);
+    Task<IEnumerable<EventStatistic>> GetEventsStatisticByCategory();
     Task<IEnumerable<EventDto>> GetEventsByTickets(EventsByTicketsDto eventsByTicketsDto);
     Task<IEnumerable<EventDto>> GetEventsByOrganizerId(string organizerId);
     Task<DetailEventDto?> GetEventById(int eventId);

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using TicketTVD.Services.PaymentAPI.Data;
 using TicketTVD.Services.PaymentAPI.Models;
+using TicketTVD.Services.PaymentAPI.Models.Dto;
 using TicketTVD.Services.PaymentAPI.Services.IServices;
 
 namespace TicketTVD.Services.PaymentAPI.Services;

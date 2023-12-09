@@ -16,7 +16,7 @@ public class TicketService : ITicketService
     public async Task<IEnumerable<TicketDto>> GetTicketsByPaymentId(int paymentId)
     {
         var client = _httpClientFactory.CreateClient("Ticket");
-        var response = await client.GetAsync($"/get-by-payment/{paymentId}");
+        var response = await client.GetAsync($"/ticket/get-by-payment/{paymentId}");
         var apiContent = await response.Content.ReadAsStringAsync();
         var resp = JsonConvert.DeserializeObject<ResponseDto>(apiContent);
         if (resp.IsSuccess)
@@ -31,7 +31,7 @@ public class TicketService : ITicketService
     {
         var client = _httpClientFactory.CreateClient("Ticket");
 
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/create-tickets/{paymentId}")
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/ticket/create-tickets/{paymentId}")
         {
             Content = new StringContent(JsonConvert.SerializeObject(createTicketsDto), Encoding.UTF8, "application/json")
         };
@@ -51,7 +51,7 @@ public class TicketService : ITicketService
     {
         var client = _httpClientFactory.CreateClient("Ticket");
 
-        var request = new HttpRequestMessage(HttpMethod.Patch, $"/validate-tickets/{paymentId}")
+        var request = new HttpRequestMessage(HttpMethod.Patch, $"/ticket/validate-tickets/{paymentId}")
         {
             Content = new StringContent(JsonConvert.SerializeObject(isSuccess), Encoding.UTF8, "application/json")
         };

@@ -44,6 +44,7 @@ builder.Services.AddHttpClient("Event",
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IMessageBus, MessageBus>();
 builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<IStatisticService, StatisticService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(option =>

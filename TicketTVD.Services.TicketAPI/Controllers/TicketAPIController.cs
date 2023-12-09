@@ -39,7 +39,7 @@ namespace TicketTVD.Services.TicketAPI.Controllers
         }
 
         [HttpGet]
-        [Route("/my-tickets/{userId}")]
+        [Route("my-tickets/{userId}")]
         public async Task<IActionResult> GetTicketsByUserId(string userId)
         {
             try
@@ -88,7 +88,7 @@ namespace TicketTVD.Services.TicketAPI.Controllers
         }
         
         [HttpGet]
-        [Route("/get-by-payment/{paymentId:int}")]
+        [Route("get-by-payment/{paymentId:int}")]
         public async Task<IActionResult> GetTicketsByPaymentId(int paymentId)
         {
             try
@@ -109,7 +109,7 @@ namespace TicketTVD.Services.TicketAPI.Controllers
         }
         
         [HttpPost]
-        [Route("/create-tickets/{paymentId:int}")]
+        [Route("create-tickets/{paymentId:int}")]
         public async Task<IActionResult> CreateTickets(int paymentId, [FromBody] CreateTicketsDto createTicketsDto)
         {
             try
@@ -130,7 +130,7 @@ namespace TicketTVD.Services.TicketAPI.Controllers
         }
         
         [HttpPatch]
-        [Route("/validate-tickets/{paymentId:int}")]
+        [Route("validate-tickets/{paymentId:int}")]
         public async Task<IActionResult> ValidateTickets(int paymentId, [FromBody] bool isSuccess)
         {
             try

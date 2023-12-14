@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TicketTVD.Services.TicketAPI.Data;
 
@@ -11,9 +12,11 @@ using TicketTVD.Services.TicketAPI.Data;
 namespace TicketTVD.Services.TicketAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231212081307_AddStatusMigrations")]
+    partial class AddStatusMigrations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,9 +96,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("SoldQuantity")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
@@ -111,7 +111,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 1,
                             Price = 0m,
                             Quantity = 161,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2022, 12, 13, 12, 9, 52, 0, DateTimeKind.Local)
                         },
                         new
@@ -121,7 +120,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 2,
                             Price = 0m,
                             Quantity = 79,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 2, 23, 10, 24, 1, 0, DateTimeKind.Local)
                         },
                         new
@@ -131,7 +129,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 3,
                             Price = 4221000m,
                             Quantity = 103,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 2, 13, 2, 1, 46, 0, DateTimeKind.Local)
                         },
                         new
@@ -141,7 +138,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 4,
                             Price = 0m,
                             Quantity = 30,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 3, 25, 21, 47, 16, 0, DateTimeKind.Local)
                         },
                         new
@@ -151,7 +147,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 5,
                             Price = 4684000m,
                             Quantity = 13,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 1, 16, 17, 17, 12, 0, DateTimeKind.Local)
                         },
                         new
@@ -161,7 +156,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 6,
                             Price = 8166000m,
                             Quantity = 61,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 5, 7, 16, 36, 28, 0, DateTimeKind.Local)
                         },
                         new
@@ -171,7 +165,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 7,
                             Price = 0m,
                             Quantity = 196,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2022, 12, 6, 11, 4, 2, 0, DateTimeKind.Local)
                         },
                         new
@@ -181,7 +174,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 8,
                             Price = 0m,
                             Quantity = 51,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 1, 10, 3, 21, 3, 0, DateTimeKind.Local)
                         },
                         new
@@ -191,7 +183,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 9,
                             Price = 0m,
                             Quantity = 8,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 6, 21, 23, 29, 58, 0, DateTimeKind.Local)
                         },
                         new
@@ -201,7 +192,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 10,
                             Price = 0m,
                             Quantity = 20,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 5, 30, 18, 15, 6, 0, DateTimeKind.Local)
                         },
                         new
@@ -211,7 +201,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 11,
                             Price = 0m,
                             Quantity = 130,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 8, 2, 17, 0, 3, 0, DateTimeKind.Local)
                         },
                         new
@@ -221,7 +210,6 @@ namespace TicketTVD.Services.TicketAPI.Migrations
                             EventId = 12,
                             Price = 9620000m,
                             Quantity = 15,
-                            SoldQuantity = 0,
                             StartTime = new DateTime(2023, 1, 10, 20, 2, 29, 0, DateTimeKind.Local)
                         });
                 });

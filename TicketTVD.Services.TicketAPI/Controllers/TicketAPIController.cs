@@ -87,6 +87,34 @@ namespace TicketTVD.Services.TicketAPI.Controllers
             return Ok(_response);
         }
         
+        [HttpPatch]
+        [Route("{id:int}")]
+        public async Task<IActionResult> UpdateTicketInfo(int id, [FromBody] UdpateTicketDto udpateTicketDto)
+        {
+            try
+            {
+                var ticketDto = await _ticketService.UpdateTicketInfo(id, udpateTicketDto);
+
+                if (ticketDto is null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Không tìm thấy thông tin vé!";
+                    return NotFound(_response);
+                }
+
+                _response.Data = ticketDto;
+                _response.Message = "Update the ticket successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+        
         [HttpGet]
         [Route("get-by-payment/{paymentId:int}")]
         public async Task<IActionResult> GetTicketsByPaymentId(int paymentId)
@@ -139,6 +167,34 @@ namespace TicketTVD.Services.TicketAPI.Controllers
 
                 _response.Data = ticketDtos;
                 _response.Message = "Validate tickets successfully!";
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+                return StatusCode(StatusCodes.Status500InternalServerError, _response);
+            }
+
+            return Ok(_response);
+        }
+        
+        [HttpPatch]
+        [Route("terminate/{ticketId:int}")]
+        public async Task<IActionResult> TerminateTicket(int ticketId)
+        {
+            try
+            {
+                var ticketDtos = await _ticketService.TerminateTicket(ticketId);
+
+                if (ticketDtos == null)
+                {
+                    _response.IsSuccess = false;
+                    _response.Message = "Không tìm thấy thông tin vé!";
+                    return NotFound(_response);
+                }
+
+                _response.Data = ticketDtos;
+                _response.Message = "Terminate new tickets successfully!";
             }
             catch (Exception ex)
             {

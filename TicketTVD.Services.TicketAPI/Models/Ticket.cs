@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using TicketTVD.Services.TicketAPI.Models.Enum;
 
 namespace TicketTVD.Services.TicketAPI.Models;
 
@@ -14,11 +16,11 @@ public class Ticket
     public string OwnerPhone { get; set; }
     public int PaymentId { get; set; }
     public bool IsPaid { get; set; }
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public TicketStatus Status { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     
     [ForeignKey("TicketDetailsId")] 
     public virtual TicketDetail TicketDetail { get; set; }
-    // [ForeignKey("PaymentId")] 
-    // public virtual Payment Payment { get; set; }
 }

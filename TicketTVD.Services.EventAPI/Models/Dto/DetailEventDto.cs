@@ -19,6 +19,7 @@ public class DetailEventDto
     public string CreatorId { get; set; }
     
     public bool TicketIsPaid { get; set; }
+    public int TicketSoldQuantity { get; set; }
     public int TicketQuantity { get; set; }
     public decimal? TicketPrice { get; set; }
     public DateTime TicketStartTime { get; set; }

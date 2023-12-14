@@ -94,6 +94,25 @@ namespace TicketTVD.Services.PaymentAPI.Controllers
             return Ok(_response);
         }
 
+        [HttpGet]
+        [Route("event/{eventId:int}")]
+        public async Task<IActionResult> GetPaymentByEventId(int eventId)
+        {
+            try
+            {
+                var payments = _db.Payments.Where(p => p.EventId == eventId).ToList();
+
+                _response.Data = _mapper.Map<IEnumerable<PaymentDto>>(payments);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.Message = ex.Message.ToString();
+            }
+
+            return Ok(_response);
+        }
+
         [HttpPost("checkout")]
         public async Task<IActionResult> Checkout([FromBody] CheckoutDto checkoutDto)
         {
@@ -190,11 +209,6 @@ namespace TicketTVD.Services.PaymentAPI.Controllers
                 var service = new SessionService();
                 Session session = service.Get(payment.StripeSessionId);
 
-                var paymentIntentService = new PaymentIntentService();
-                PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
-                var paymentMethodService = new PaymentMethodService();
-                PaymentMethod paymentMethod = paymentMethodService.Get(paymentIntent.PaymentMethodId);
-
                 var paymentDto = new PaymentDto();
 
                 if (payment.Status == Status.APPROVED)
@@ -203,34 +217,50 @@ namespace TicketTVD.Services.PaymentAPI.Controllers
                     paymentDto = _mapper.Map<PaymentDto>(payment);
                     paymentDto.Tickets = tickets;
                 }
-                else if (paymentIntent.Status == "succeeded")
+                else if (payment.TotalPrice == 0)
                 {
-                    // Then payment was successful
-                    payment.PaymentIntentId = paymentIntent.Id;
                     payment.Status = Status.APPROVED;
-                    _db.SaveChanges();
+                    payment.UpdatedAt = DateTime.Now;
                     var tickets = await _ticketService.ValidateTickets(paymentId, true);
                     paymentDto = _mapper.Map<PaymentDto>(payment);
                     paymentDto.Tickets = tickets;
-
-                    await _messageBus.PublishMessage(new ValidateStripeResponseDto
-                        {
-                            Quantity = paymentDto.Quantity,
-                            TotalPrice = paymentDto.TotalPrice,
-                            Discount = paymentDto.Discount,
-                            CustomerName = paymentDto.CustomerName,
-                            CustomerEmail = paymentDto.CustomerEmail,
-                            CustomerPhone = paymentDto.CustomerPhone,
-                            Tickets = paymentDto.Tickets,
-                        },
-                        _configuration.GetValue<string>("TopicAndQueueNames:EmailTicketQueue"));
+                    _db.SaveChanges();
                 }
                 else
                 {
-                    payment.Status = Status.CANCELLED;
-                    _ticketService.ValidateTickets(paymentId, false);
-                    _response.IsSuccess = false;
+                    var paymentIntentService = new PaymentIntentService();
+                    PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
+
+                    if (paymentIntent.Status == "succeeded")
+                    {
+                        // Then payment was successful
+                        payment.PaymentIntentId = paymentIntent.Id;
+                        payment.Status = Status.APPROVED;
+                        _db.SaveChanges();
+                        var tickets = await _ticketService.ValidateTickets(paymentId, true);
+                        paymentDto = _mapper.Map<PaymentDto>(payment);
+                        paymentDto.Tickets = tickets;
+
+                        await _messageBus.PublishMessage(new ValidateStripeResponseDto
+                            {
+                                Quantity = paymentDto.Quantity,
+                                TotalPrice = paymentDto.TotalPrice,
+                                Discount = paymentDto.Discount,
+                                CustomerName = paymentDto.CustomerName,
+                                CustomerEmail = paymentDto.CustomerEmail,
+                                CustomerPhone = paymentDto.CustomerPhone,
+                                Tickets = paymentDto.Tickets,
+                            },
+                            _configuration.GetValue<string>("TopicAndQueueNames:EmailTicketQueue"));
+                    }
+                    else
+                    {
+                        payment.Status = Status.CANCELLED;
+                        _ticketService.ValidateTickets(paymentId, false);
+                        _response.IsSuccess = false;
+                    }
                 }
+
 
                 _response.Data = new ValidateStripeResponseDto
                 {
@@ -247,14 +277,22 @@ namespace TicketTVD.Services.PaymentAPI.Controllers
                     UserId = paymentDto.UserId,
                     PaymentIntentId = paymentDto.PaymentIntentId,
                     StripeSessionId = paymentDto.StripeSessionId,
-                    PaymentMethod = new PaymentMethodDto
-                    {
-                        Card = paymentMethod.Card.Brand,
-                        Last4 = paymentMethod.Card.Last4
-                    },
                     CreatedAt = paymentDto.CreatedAt,
                     UpdatedAt = paymentDto.UpdatedAt
                 };
+
+                if (payment.TotalPrice != 0)
+                {
+                    var paymentIntentService = new PaymentIntentService();
+                    PaymentIntent paymentIntent = paymentIntentService.Get(session.PaymentIntentId);
+                    var paymentMethodService = new PaymentMethodService();
+                    PaymentMethod paymentMethod = paymentMethodService.Get(paymentIntent.PaymentMethodId);
+                    (_response.Data as ValidateStripeResponseDto).PaymentMethod = new PaymentMethodDto
+                    {
+                        Card = paymentMethod.Card.Brand,
+                        Last4 = paymentMethod.Card.Last4
+                    };
+                }
             }
             catch (Exception ex)
             {

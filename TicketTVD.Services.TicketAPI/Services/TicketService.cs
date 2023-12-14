@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TicketTVD.Services.TicketAPI.Data;
 using TicketTVD.Services.TicketAPI.Models;
 using TicketTVD.Services.TicketAPI.Models.Dto;
+using TicketTVD.Services.TicketAPI.Models.Enum;
 using TicketTVD.Services.TicketAPI.Services.IServices;
 using TicketTVD.Services.TicketAPI.Utility;
 
@@ -96,6 +98,33 @@ public class TicketService : ITicketService
         }
     }
 
+    public async Task<TicketDto?> UpdateTicketInfo(int ticketId, UdpateTicketDto updateTicketDto)
+    {
+        try
+        {
+            var ticket = await _db.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
+            ticket.OwnerName = updateTicketDto.Fullname;
+            ticket.OwnerEmail = updateTicketDto.Email;
+            ticket.OwnerPhone = updateTicketDto.Phone;
+
+            ticket.UpdatedAt = DateTime.Now;
+
+            await _db.SaveChangesAsync();
+
+            return _mapper.Map<TicketDto>(ticket);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
     public async Task<IEnumerable<TicketDto>> GetTicketsByPaymentId(int paymentId)
     {
         try
@@ -111,6 +140,7 @@ public class TicketService : ITicketService
                     OwnerPhone = t.OwnerPhone,
                     StartTime = td.StartTime,
                     CloseTime = td.CloseTime,
+                    Status = t.Status,
                     Price = td.Price,
                     EventId = td.EventId,
                     TicketCode = t.TicketCode
@@ -139,10 +169,11 @@ public class TicketService : ITicketService
                     _db.TicketDetails.First(td => td.EventId == createTicketsDto.Tickets.First().EventId);
                 ticket.TicketDetailId = ticketDetail.Id;
                 ticket.IsPaid = false;
+                ticket.Status = TicketStatus.PENDING;
                 ticket.CreatedAt = DateTime.Now;
                 ticket.UpdatedAt = DateTime.Now;
             }
-            
+
             _db.Tickets.AddRange(tickets);
             _db.SaveChanges();
 
@@ -169,14 +200,18 @@ public class TicketService : ITicketService
                     ticket.TicketCode =
                         TicketCodeGenerator.HashSHA512String(ticket.OwnerName, ticket.OwnerEmail, ticket.OwnerPhone);
                     ticket.IsPaid = true;
+                    if (ticket.Status != TicketStatus.TERMINATED)
+                    {
+                        ticket.Status = TicketStatus.PAID;
+                    }
                     ticket.UpdatedAt = DateTime.Now;
                 }
 
                 var ticketDetail = _db.TicketDetails.First(td => td.Id == tickets.First().TicketDetailId);
-                ticketDetail.Quantity -= tickets.Count();
+                ticketDetail.SoldQuantity = ticketDetail.SoldQuantity + tickets.Count();
 
                 _db.SaveChanges();
-                
+
                 var ticketDtos = (from t in tickets
                     join td in _db.TicketDetails on t.TicketDetailId equals td.Id
                     where t.PaymentId == paymentId
@@ -203,6 +238,29 @@ public class TicketService : ITicketService
                 _db.SaveChanges();
                 return null;
             }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<TicketDto?> TerminateTicket(int ticketId)
+    {
+        try
+        {
+            var ticket = await _db.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
+            ticket.Status = TicketStatus.TERMINATED;
+
+            await _db.SaveChangesAsync();
+
+            return _mapper.Map<TicketDto>(ticket);
         }
         catch (Exception ex)
         {
@@ -257,6 +315,8 @@ public class TicketService : ITicketService
         try
         {
             var newTicketDetail = _mapper.Map<TicketDetail>(createTicketDetailDto);
+
+            newTicketDetail.SoldQuantity = 0;
 
             await _db.TicketDetails.AddAsync(newTicketDetail);
             await _db.SaveChangesAsync();

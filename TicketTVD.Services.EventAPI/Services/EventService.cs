@@ -45,7 +45,7 @@ public class EventService : IEventService
                 var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
                 eventDto.TicketPrice = ticketDetailDto.Price;
                 eventDto.TicketQuantity = ticketDetailDto.Quantity;
-                eventDto.TicketSoldQuantity = 0;
+                eventDto.TicketSoldQuantity = ticketDetailDto.SoldQuantity;
             }
 
 
@@ -104,7 +104,7 @@ public class EventService : IEventService
                 var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
                 eventDto.TicketPrice = ticketDetailDto.Price;
                 eventDto.TicketQuantity = ticketDetailDto.Quantity;
-                eventDto.TicketSoldQuantity = 0;
+                eventDto.TicketSoldQuantity = ticketDetailDto.SoldQuantity;
             }
 
 
@@ -128,7 +128,7 @@ public class EventService : IEventService
                 var ticketDetailDto = await _ticketService.GetTicketDetailByEventId(eventDto.Id);
                 eventDto.TicketPrice = ticketDetailDto.Price;
                 eventDto.TicketQuantity = ticketDetailDto.Quantity;
-                eventDto.TicketSoldQuantity = 0;
+                eventDto.TicketSoldQuantity = ticketDetailDto.SoldQuantity;
             }
 
 
@@ -163,6 +163,7 @@ public class EventService : IEventService
 
             eventDto.TicketPrice = ticketDetailDto.Price;
             eventDto.TicketIsPaid = ticketDetailDto.IsPaid;
+            eventDto.TicketSoldQuantity = ticketDetailDto.SoldQuantity;
             eventDto.TicketQuantity = ticketDetailDto.Quantity;
             eventDto.TicketStartTime = ticketDetailDto.StartTime;
             eventDto.TicketCloseTime = ticketDetailDto.CloseTime;
@@ -249,6 +250,8 @@ public class EventService : IEventService
             eventFromDb.CategoryId = updateEventDto.CategoryId;
             eventFromDb.Location = updateEventDto.Location;
             eventFromDb.EventDate = updateEventDto.EventDate;
+            eventFromDb.StartTime = updateEventDto.StartTime;
+            eventFromDb.EndTime = updateEventDto.EndTime;
             eventFromDb.IsPromotion = updateEventDto.IsPromotion;
             eventFromDb.PromotionPlan = updateEventDto.PromotionPlan;
 

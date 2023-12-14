@@ -13,6 +13,8 @@ public class EventDto
     public string CreatorId { get; set; }
     public string Location { get; set; }
     public DateTime EventDate { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
     public bool IsPromotion { get; set; }
     public int? PromotionPlan { get; set; }
     public decimal TicketPrice { get; set; }

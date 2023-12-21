@@ -66,7 +66,11 @@ public class CategoryService : ICategoryService
             
             var newCategory = _mapper.Map<Category>(createCategoryDto);
             
+            newCategory.CreatedAt = DateTime.Now;
+            newCategory.UpdatedAt = DateTime.Now;
+            
             _db.Categories.AddAsync(newCategory);
+            _db.SaveChanges();
             
             return true;
         }
@@ -88,6 +92,8 @@ public class CategoryService : ICategoryService
             }
 
             category.Name = updateCategoryDto.Name;
+            category.Color = updateCategoryDto.Color;
+            category.UpdatedAt = DateTime.Now;
             
             _db.SaveChanges();
             

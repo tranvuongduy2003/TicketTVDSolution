@@ -99,6 +99,11 @@ public class AuthService : IAuthService
 
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDto.Password);
 
+            if (user != null && user.Status == Status.DEACTIVE)
+            {
+                throw new Exception("Tài khoản đã bị vô hiệu hóa");
+            }
+
             if (user == null || isValid == false)
             {
                 return new LoginResponseDto() { User = null, RefreshToken = null, AccessToken = null };

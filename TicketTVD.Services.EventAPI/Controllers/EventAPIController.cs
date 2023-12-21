@@ -82,7 +82,7 @@ namespace TicketTVD.Services.EventAPI.Controllers
         [Authorize]
         [Authorize(Roles = "ORGANIZER")]
         [HttpGet]
-        [Route("{organizerId}")]
+        [Route("/event-by-organizer/{organizerId}")]
         public async Task<IActionResult> GetEventsByOrganizerId(string organizerId)
         {
             try

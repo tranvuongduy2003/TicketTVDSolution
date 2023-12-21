@@ -1,11 +1,8 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
-using Microsoft.AspNetCore.Connections;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Extensions;
 using TicketTVD.Services.AuthAPI.Models;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 

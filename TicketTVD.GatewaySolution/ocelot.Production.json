@@ -1,3 +1,491 @@
 ﻿{
+  "Routes": [
+    {
+      "DownstreamPathTemplate": "/category",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicescategory.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/category",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/category/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicescategory.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/category/{id}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/category",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicescategory.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/category",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/category/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicescategory.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/category/{id}",
+      "UpstreamHttpMethod": [
+        "DELETE",
+        "PUT"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
 
+    {
+      "DownstreamPathTemplate": "/event",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdserviceseventapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/event",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/event?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdserviceseventapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/event?{everything}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/event",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdserviceseventapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/event",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/event/statistic-by-category",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdserviceseventapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/event/statistic-by-category",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/get-events-by-tickets",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdserviceseventapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/get-events-by-tickets",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/event/event-by-organizer/{organizerId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdserviceseventapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/event/event-by-organizer/{organizerId}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/event/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdserviceseventapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/event/{id}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/event/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdserviceseventapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/event/{id}",
+      "UpstreamHttpMethod": [
+        "PUT",
+        "DELETE"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/statistic/general",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicespaymentapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/statistic/general",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/payment",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicespaymentapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/payment",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/payment/{userId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicespaymentapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/payment/{userId}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/payment/{userId}?{everything}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicespaymentapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/payment/{userId}?{everything}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/payment/event/{eventId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicespaymentapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/payment/event/{eventId}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/payment/checkout",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicespaymentapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/payment/checkout",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/payment/create-stripe-session",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicespaymentapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/payment/create-stripe-session",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/payment/validate-stripe-session/{paymentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicespaymentapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/payment/validate-stripe-session/{paymentId}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket/my-tickets/{userId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket/my-tickets/{userId}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket/{id}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "PATCH"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket/get-by-payment/{paymentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket/get-by-payment/{paymentId}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket/create-tickets/{paymentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket/create-tickets/{paymentId}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket/validate-tickets/{paymentId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket/validate-tickets/{paymentId}",
+      "UpstreamHttpMethod": [
+        "PATCH"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket/terminate/{ticketId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket/terminate/{ticketId}",
+      "UpstreamHttpMethod": [
+        "PATCH"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket-detail",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket-detail",
+      "UpstreamHttpMethod": [
+        "Get",
+        "POST"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket-detail/{id}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket-detail/{id}",
+      "UpstreamHttpMethod": [
+        "Get",
+        "PUT"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/ticket-detail/event/{eventId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket-detail/event/{eventId}",
+      "UpstreamHttpMethod": [
+        "Get"
+      ]
+    },
+    {
+      "DownstreamPathTemplate": "/ticket-detail/event/{eventId}",
+      "DownstreamScheme": "https",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tickettvdservicesticketapi.azurewebsites.net"
+        }
+      ],
+      "UpstreamPathTemplate": "/ticket-detail/event/{eventId}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://tickettvdgatewaysolution.azurewebsites.net"
+  }
 }

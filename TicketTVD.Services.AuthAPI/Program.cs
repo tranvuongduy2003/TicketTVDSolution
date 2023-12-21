@@ -1,9 +1,9 @@
-using System.Text.Json.Serialization;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using TicketTVD.MessageBus;
 using TicketTVD.Services.AuthAPI;
 using TicketTVD.Services.AuthAPI.Data;
@@ -81,7 +81,11 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("/swagger/v1/swagger.json", "AUTH API");
+    if (!app.Environment.IsDevelopment())
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "AUTH API");
+        c.RoutePrefix = string.Empty;
+    }
 });
 
 app.UseHttpsRedirection();

@@ -21,6 +21,6 @@ public class Ticket
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     
-    [ForeignKey("TicketDetailsId")] 
+    [ForeignKey("TicketDetailId")] 
     public virtual TicketDetail TicketDetail { get; set; }
 }

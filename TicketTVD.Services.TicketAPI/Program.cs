@@ -1,13 +1,13 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using TicketTVD.Services.TicketAPI;
 using TicketTVD.Services.TicketAPI.Data;
 using TicketTVD.Services.TicketAPI.Extensions;
 using TicketTVD.Services.TicketAPI.Services;
 using TicketTVD.Services.TicketAPI.Services.IServices;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
 
 var TicketCors = "TicketCors";
 
@@ -65,11 +65,16 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "TICKET API"); });
-}
+    if (!app.Environment.IsDevelopment())
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "TICKET API");
+        c.RoutePrefix = string.Empty;
+    }
+});
+
 
 app.UseHttpsRedirection();
 

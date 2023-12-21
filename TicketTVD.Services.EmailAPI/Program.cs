@@ -1,9 +1,9 @@
+using Microsoft.EntityFrameworkCore;
 using TicketTVD.Services.EmailAPI.Data;
 using TicketTVD.Services.EmailAPI.Extension;
 using TicketTVD.Services.EmailAPI.Messaging;
-using TicketTVD.Services.EmailAPI.Services;
-using Microsoft.EntityFrameworkCore;
 using TicketTVD.Services.EmailAPI.Models;
+using TicketTVD.Services.EmailAPI.Services;
 using TicketTVD.Services.EmailAPI.Services.IServices;
 
 var EmailCors = "EmailCors";
@@ -43,7 +43,7 @@ app.UseSwaggerUI(c =>
 {
     if (!app.Environment.IsDevelopment())
     {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Email API");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "EMAIL API");
         c.RoutePrefix = string.Empty;
     }
 });

@@ -1,12 +1,12 @@
 using AutoMapper;
-using TicketTVD.Services.PaymentAPI;
-using TicketTVD.Services.PaymentAPI.Data;
-using TicketTVD.Services.PaymentAPI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
 using TicketTVD.MessageBus;
+using TicketTVD.Services.PaymentAPI;
+using TicketTVD.Services.PaymentAPI.Data;
+using TicketTVD.Services.PaymentAPI.Extensions;
 using TicketTVD.Services.PaymentAPI.Services;
 using TicketTVD.Services.PaymentAPI.Services.IServices;
 using TicketTVD.Services.PaymentAPI.Utility;
@@ -82,11 +82,16 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "EVENT API"); });
-}
+    if (!app.Environment.IsDevelopment())
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "PAYMENT API");
+        c.RoutePrefix = string.Empty;
+    }
+});
 
 app.UseHttpsRedirection();
 

@@ -11,12 +11,381 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Event> Events { get; set; }
+    public DbSet<Album> Albums { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        this.SeedAlbums(modelBuilder);
         this.SeedEvents(modelBuilder);
     }
+
+    private void SeedAlbums(ModelBuilder builder)
+    {
+        builder.Entity<Album>().HasData(
+            new Album()
+            {
+                Id = 1,
+                EventId = 1,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 2,
+                EventId = 1,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 3,
+                EventId = 1,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 4,
+                EventId = 1,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 5,
+                EventId = 1,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 6,
+                EventId = 2,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 7,
+                EventId = 2,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 8,
+                EventId = 2,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 9,
+                EventId = 2,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 10,
+                EventId = 2,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 11,
+                EventId = 3,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 12,
+                EventId = 3,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 13,
+                EventId = 3,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 14,
+                EventId = 3,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 15,
+                EventId = 3,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 16,
+                EventId = 4,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 17,
+                EventId = 4,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 18,
+                EventId = 4,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 19,
+                EventId = 4,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 20,
+                EventId = 4,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 21,
+                EventId = 5,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 22,
+                EventId = 5,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 23,
+                EventId = 5,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 24,
+                EventId = 5,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 25,
+                EventId = 5,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 26,
+                EventId = 6,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 27,
+                EventId = 6,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 28,
+                EventId = 6,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 29,
+                EventId = 6,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 30,
+                EventId = 6,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 31,
+                EventId = 7,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 32,
+                EventId = 7,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 33,
+                EventId = 7,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 34,
+                EventId = 7,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 35,
+                EventId = 7,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 36,
+                EventId = 8,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 37,
+                EventId = 8,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 38,
+                EventId = 8,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 39,
+                EventId = 8,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 40,
+                EventId = 8,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 41,
+                EventId = 9,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 42,
+                EventId = 9,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 43,
+                EventId = 9,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 44,
+                EventId = 9,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 45,
+                EventId = 9,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 46,
+                EventId = 10,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 47,
+                EventId = 10,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 48,
+                EventId = 10,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 49,
+                EventId = 10,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 50,
+                EventId = 10,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 51,
+                EventId = 11,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 52,
+                EventId = 11,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 53,
+                EventId = 11,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 54,
+                EventId = 11,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 55,
+                EventId = 11,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            },
+            new Album()
+            {
+                Id = 56,
+                EventId = 12,
+                Uri = "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
+            },
+            new Album()
+            {
+                Id = 57,
+                EventId = 12,
+                Uri = "http://dummyimage.com/169x100.png/dddddd/000000",
+            },
+            new Album()
+            {
+                Id = 58,
+                EventId = 12,
+                Uri = "http://dummyimage.com/183x100.png/ff4444/ffffff",
+            },
+            new Album()
+            {
+                Id = 59,
+                EventId = 12,
+                Uri = "http://dummyimage.com/106x100.png/cc0000/ffffff",
+            },
+            new Album()
+            {
+                Id = 60,
+                EventId = 12,
+                Uri = "http://dummyimage.com/119x100.png/ff4444/ffffff"
+            }
+        );
+    }
+
 
     private void SeedEvents(ModelBuilder builder)
     {
@@ -28,16 +397,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Viviana Ellingworth",
                 Description = "Drainage of Cerebellum with Drainage Device, Open Approach",
                 CategoryId = 1,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "Suite 97",
                 EventDate = DateTime.Parse("2022-12-13T05:09:52Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 28,
@@ -55,16 +418,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Lucita Kite",
                 Description = "Excision of Left Brachial Vein, Percutaneous Endoscopic Approach, Diagnostic",
                 CategoryId = 2,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "Room 1255",
-                EventDate =DateTime.Parse("2023-02-23T03:24:01Z"),
+                EventDate = DateTime.Parse("2023-02-23T03:24:01Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
@@ -82,16 +439,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Edlin Doale",
                 Description = "Revision of Autologous Tissue Substitute in Chest Wall, External Approach",
                 CategoryId = 3,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "Room 1341",
                 EventDate = DateTime.Parse("2023-02-12T19:01:46Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 76,
@@ -101,7 +452,7 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 4,
@@ -109,16 +460,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Maitilde Finlason",
                 Description = "Extirpation of Matter from Common Bile Duct, Open Approach",
                 CategoryId = 4,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "PO Box 21676",
                 EventDate = DateTime.Parse("2023-03-25T14:47:16Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
@@ -128,7 +473,7 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 5,
@@ -136,16 +481,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Elisabet Pasmore",
                 Description = "Dilation of Left External Iliac Artery, Bifurcation, Percutaneous Endoscopic Approach",
                 CategoryId = 5,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "Suite 54",
                 EventDate = DateTime.Parse("2023-01-16T10:17:12Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 93,
@@ -155,7 +494,7 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 6,
@@ -163,16 +502,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Nicolai Pinor",
                 Description = "Immobilization of Right Lower Leg using Brace",
                 CategoryId = 1,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "PO Box 57974",
                 EventDate = DateTime.Parse("2023-05-07T09:36:28Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
@@ -182,7 +515,7 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 7,
@@ -190,16 +523,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Jorgan Donaghy",
                 Description = "Dilation of Upper Artery with Drug-eluting Intraluminal Device, Percutaneous Approach",
                 CategoryId = 2,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "11th Floor",
                 EventDate = DateTime.Parse("2022-12-06T04:04:02Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 91,
@@ -209,7 +536,7 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 8,
@@ -217,16 +544,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Sonya Goddert",
                 Description = "Destruction of Right Shoulder Muscle, Open Approach",
                 CategoryId = 3,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "Room 1646",
                 EventDate = DateTime.Parse("2023-01-09T20:21:03Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
@@ -236,24 +557,19 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 9,
                 CoverImage = "http://dummyimage.com/154x100.png/5fa2dd/ffffff",
                 Name = "Simone Noblett",
-                Description = "Bypass Cecum to Cutaneous with Nonautologous Tissue Substitute, Via Natural or Artificial Opening Endoscopic",
+                Description =
+                    "Bypass Cecum to Cutaneous with Nonautologous Tissue Substitute, Via Natural or Artificial Opening Endoscopic",
                 CategoryId = 4,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "Room 209",
                 EventDate = DateTime.Parse("2023-06-21T16:29:58Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 69,
@@ -263,7 +579,7 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 10,
@@ -271,16 +587,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Myrilla De Bruin",
                 Description = "Excision of Greater Omentum, Percutaneous Approach",
                 CategoryId = 5,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "11th Floor",
                 EventDate = DateTime.Parse("2023-05-30T11:15:06Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = false,
                 PromotionPlan = 0,
@@ -290,7 +600,7 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 11,
@@ -298,16 +608,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Isobel McIlroy",
                 Description = "Supplement Left Foot Vein with Nonautologous Tissue Substitute, Open Approach",
                 CategoryId = 1,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "1st Floor",
                 EventDate = DateTime.Parse("2023-08-02T10:00:03Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 81,
@@ -317,7 +621,7 @@ public class ApplicationDbContext : DbContext
                 Status = Status.UPCOMING,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
-            }, 
+            },
             new Event()
             {
                 Id = 12,
@@ -325,16 +629,10 @@ public class ApplicationDbContext : DbContext
                 Name = "Bradly Majury",
                 Description = "Resection of Perineum Tendon, Open Approach",
                 CategoryId = 2,
-                Album = new List<string>()
-                {
-                    "http://dummyimage.com/189x100.png/5fa2dd/ffffff",
-                    "http://dummyimage.com/169x100.png/dddddd/000000",
-                    "http://dummyimage.com/183x100.png/ff4444/ffffff",
-                    "http://dummyimage.com/106x100.png/cc0000/ffffff",
-                    "http://dummyimage.com/119x100.png/ff4444/ffffff"
-                },
                 Location = "PO Box 86135",
                 EventDate = DateTime.Parse("2023-01-10T13:02:29Z"),
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now,
                 CreatorId = "b74ddd14-6340-4840-95c2-db1255484302",
                 IsPromotion = true,
                 PromotionPlan = 95,

@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using TicketTVD.Services.TicketAPI.Data;
 using TicketTVD.Services.TicketAPI.Models;
 using TicketTVD.Services.TicketAPI.Models.Dto;
+using TicketTVD.Services.TicketAPI.Models.Enum;
 using TicketTVD.Services.TicketAPI.Services.IServices;
+using TicketTVD.Services.TicketAPI.Utility;
 
 namespace TicketTVD.Services.TicketAPI.Services;
 
@@ -16,15 +19,29 @@ public class TicketService : ITicketService
         _db = db;
         _mapper = mapper;
     }
-    
+
     public async Task<IEnumerable<TicketDto>> GetTickets()
     {
         try
         {
-            var tickets = _db.Tickets.ToList();
-            var ticketDtos = _mapper.Map<IEnumerable<TicketDto>>(tickets);
+            var tickets = (from t in _db.Tickets
+                join td in _db.TicketDetails on t.TicketDetailId equals td.Id
+                select new TicketDto
+                {
+                    Id = t.Id,
+                    OwnerName = t.OwnerName,
+                    OwnerEmail = t.OwnerEmail,
+                    OwnerPhone = t.OwnerPhone,
+                    StartTime = td.StartTime,
+                    CloseTime = td.CloseTime,
+                    Price = td.Price,
+                    EventId = td.EventId,
+                    TicketCode = t.TicketCode
+                }).ToList();
 
-            return ticketDtos;
+            // var ticketDtos = _mapper.Map<IEnumerable<TicketDto>>(tickets);
+
+            return tickets;
         }
         catch (Exception ex)
         {
@@ -51,16 +68,199 @@ public class TicketService : ITicketService
     {
         try
         {
-            var ticket = _db.Tickets.FirstOrDefault(t => t.Id == ticketId);
+            var ticket = (from t in _db.Tickets
+                join td in _db.TicketDetails on t.TicketDetailId equals td.Id
+                select new TicketDto
+                {
+                    Id = t.Id,
+                    OwnerName = t.OwnerName,
+                    OwnerEmail = t.OwnerEmail,
+                    OwnerPhone = t.OwnerPhone,
+                    StartTime = td.StartTime,
+                    CloseTime = td.CloseTime,
+                    Price = td.Price,
+                    EventId = td.EventId,
+                    TicketCode = t.TicketCode
+                }).FirstOrDefault(t => t.Id == ticketId);
 
             if (ticket is null)
             {
                 return null;
             }
-            
-            var ticketDto = _mapper.Map<TicketDto>(ticket);
 
-            return ticketDto;
+            // var ticketDto = _mapper.Map<TicketDto>(ticket);
+
+            return ticket;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<TicketDto?> UpdateTicketInfo(int ticketId, UdpateTicketDto updateTicketDto)
+    {
+        try
+        {
+            var ticket = await _db.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
+            ticket.OwnerName = updateTicketDto.Fullname;
+            ticket.OwnerEmail = updateTicketDto.Email;
+            ticket.OwnerPhone = updateTicketDto.Phone;
+
+            ticket.UpdatedAt = DateTime.Now;
+
+            await _db.SaveChangesAsync();
+
+            return _mapper.Map<TicketDto>(ticket);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<IEnumerable<TicketDto>> GetTicketsByPaymentId(int paymentId)
+    {
+        try
+        {
+            var tickets = (from t in _db.Tickets
+                join td in _db.TicketDetails on t.TicketDetailId equals td.Id
+                where t.PaymentId == paymentId
+                select new TicketDto
+                {
+                    Id = t.Id,
+                    OwnerName = t.OwnerName,
+                    OwnerEmail = t.OwnerEmail,
+                    OwnerPhone = t.OwnerPhone,
+                    StartTime = td.StartTime,
+                    CloseTime = td.CloseTime,
+                    Status = t.Status,
+                    Price = td.Price,
+                    EventId = td.EventId,
+                    TicketCode = t.TicketCode
+                }).ToList();
+
+            // var ticketDtos = _mapper.Map<IEnumerable<TicketDto>>(tickets);
+
+            return tickets;
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<IEnumerable<TicketDto>> CreateTickets(int paymentId, CreateTicketsDto createTicketsDto)
+    {
+        try
+        {
+            var tickets = _mapper.Map<IEnumerable<Ticket>>(createTicketsDto.Tickets);
+
+            foreach (var ticket in tickets)
+            {
+                ticket.PaymentId = paymentId;
+                var ticketDetail =
+                    _db.TicketDetails.First(td => td.EventId == createTicketsDto.Tickets.First().EventId);
+                ticket.TicketDetailId = ticketDetail.Id;
+                ticket.IsPaid = false;
+                ticket.Status = TicketStatus.PENDING;
+                ticket.CreatedAt = DateTime.Now;
+                ticket.UpdatedAt = DateTime.Now;
+            }
+
+            _db.Tickets.AddRange(tickets);
+            _db.SaveChanges();
+
+            // var ticketDtos = _mapper.Map<IEnumerable<TicketDto>>(tickets);
+
+            return _mapper.Map<IEnumerable<TicketDto>>(tickets);
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<IEnumerable<TicketDto>> ValidateTickets(int paymentId, bool isSuccess)
+    {
+        try
+        {
+            var tickets = _db.Tickets.Where(t => t.PaymentId == paymentId).ToList();
+
+            if (isSuccess)
+            {
+                foreach (var ticket in tickets)
+                {
+                    ticket.TicketCode =
+                        TicketCodeGenerator.HashSHA512String(ticket.OwnerName, ticket.OwnerEmail, ticket.OwnerPhone);
+                    ticket.IsPaid = true;
+                    if (ticket.Status != TicketStatus.TERMINATED)
+                    {
+                        ticket.Status = TicketStatus.PAID;
+                    }
+                    ticket.UpdatedAt = DateTime.Now;
+                }
+
+                var ticketDetail = _db.TicketDetails.First(td => td.Id == tickets.First().TicketDetailId);
+                ticketDetail.SoldQuantity = ticketDetail.SoldQuantity + tickets.Count();
+
+                _db.SaveChanges();
+
+                var ticketDtos = (from t in tickets
+                    join td in _db.TicketDetails on t.TicketDetailId equals td.Id
+                    where t.PaymentId == paymentId
+                    select new TicketDto
+                    {
+                        Id = t.Id,
+                        OwnerName = t.OwnerName,
+                        OwnerEmail = t.OwnerEmail,
+                        OwnerPhone = t.OwnerPhone,
+                        StartTime = td.StartTime,
+                        CloseTime = td.CloseTime,
+                        Price = td.Price,
+                        EventId = td.EventId,
+                        TicketCode = t.TicketCode
+                    }).ToList();
+
+                // var ticketDtos = _mapper.Map<IEnumerable<TicketDto>>(tickets);
+
+                return ticketDtos;
+            }
+            else
+            {
+                _db.Tickets.RemoveRange(tickets);
+                _db.SaveChanges();
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+    }
+
+    public async Task<TicketDto?> TerminateTicket(int ticketId)
+    {
+        try
+        {
+            var ticket = await _db.Tickets.FirstOrDefaultAsync(t => t.Id == ticketId);
+
+            if (ticket == null)
+            {
+                return null;
+            }
+
+            ticket.Status = TicketStatus.TERMINATED;
+
+            await _db.SaveChangesAsync();
+
+            return _mapper.Map<TicketDto>(ticket);
         }
         catch (Exception ex)
         {
@@ -78,7 +278,7 @@ public class TicketService : ITicketService
             {
                 return null;
             }
-            
+
             var ticketDetailDto = _mapper.Map<TicketDetailDto>(ticketDetail);
 
             return ticketDetailDto;
@@ -99,7 +299,7 @@ public class TicketService : ITicketService
             {
                 return null;
             }
-            
+
             var ticketDetailDto = _mapper.Map<TicketDetailDto>(ticketDetail);
 
             return ticketDetailDto;
@@ -115,9 +315,12 @@ public class TicketService : ITicketService
         try
         {
             var newTicketDetail = _mapper.Map<TicketDetail>(createTicketDetailDto);
-            
-            _db.TicketDetails.AddAsync(newTicketDetail);
-            
+
+            newTicketDetail.SoldQuantity = 0;
+
+            await _db.TicketDetails.AddAsync(newTicketDetail);
+            await _db.SaveChangesAsync();
+
             return true;
         }
         catch (Exception ex)
@@ -136,16 +339,15 @@ public class TicketService : ITicketService
             {
                 return false;
             }
-            
-            ticketDetail.IsPaid = updateTicketDetailDto.IsPaid;
+
             ticketDetail.Quantity = updateTicketDetailDto.Quantity;
             ticketDetail.EventId = updateTicketDetailDto.EventId;
             ticketDetail.Price = updateTicketDetailDto.Price;
             ticketDetail.StartTime = updateTicketDetailDto.StartTime;
             ticketDetail.CloseTime = updateTicketDetailDto.CloseTime;
-            
+
             _db.SaveChanges();
-            
+
             return true;
         }
         catch (Exception ex)
@@ -164,16 +366,15 @@ public class TicketService : ITicketService
             {
                 return false;
             }
-            
-            ticketDetail.IsPaid = updateTicketDetailDto.IsPaid;
+
             ticketDetail.Quantity = updateTicketDetailDto.Quantity;
             ticketDetail.EventId = updateTicketDetailDto.EventId;
             ticketDetail.Price = updateTicketDetailDto.Price;
             ticketDetail.StartTime = updateTicketDetailDto.StartTime;
             ticketDetail.CloseTime = updateTicketDetailDto.CloseTime;
-            
+
             _db.SaveChanges();
-            
+
             return true;
         }
         catch (Exception ex)

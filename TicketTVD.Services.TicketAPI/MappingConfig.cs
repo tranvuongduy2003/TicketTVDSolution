@@ -10,7 +10,8 @@ public class MappingConfig
     {
         var mappingConfig = new MapperConfiguration(config =>
         {
-            config.CreateMap<TicketDto, Ticket>().ReverseMap();
+            config.CreateMap<TicketDto, Ticket>();
+            config.CreateMap<Ticket, TicketDto>().ForMember(tdto => tdto.EventId, t => t.MapFrom(src => src.TicketDetail.EventId));
             config.CreateMap<TicketDetailDto, TicketDetail>().ReverseMap();
             config.CreateMap<CreateTicketDetailDto, TicketDetail>();
         });

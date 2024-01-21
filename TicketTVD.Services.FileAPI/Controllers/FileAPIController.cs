@@ -7,7 +7,6 @@ namespace TicketTVD.Services.FileAPI.Controllers
 {
     [Route("file")]
     [ApiController]
-    [Authorize]
     public class FileAPIController : ControllerBase
     {
         private readonly FileService _fileService;

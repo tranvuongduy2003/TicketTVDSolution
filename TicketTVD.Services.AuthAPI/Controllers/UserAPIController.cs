@@ -70,7 +70,6 @@ namespace TicketTVD.Services.AuthAPI.Controllers
         }
 
         [Authorize]
-        [Authorize(Roles = "ADMIN")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto updateUserDto)
         {
@@ -98,7 +97,6 @@ namespace TicketTVD.Services.AuthAPI.Controllers
         }
 
         [Authorize]
-        [Authorize(Roles = "ADMIN")]
         [HttpPatch("{id}/password")]
         public async Task<IActionResult> UpdateUserPassword(string id,
             [FromBody] UpdateUserPasswordDto updateUserPasswordDto)
@@ -133,7 +131,6 @@ namespace TicketTVD.Services.AuthAPI.Controllers
         }
         
         [Authorize]
-        [Authorize(Roles = "ADMIN")]
         [HttpPatch("{id}/status")]
         public async Task<IActionResult> UpdateUserStatus(string id,
             [FromBody] UpdateUserStatusDto updateUserStatusdDto)

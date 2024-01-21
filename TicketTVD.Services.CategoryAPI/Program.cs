@@ -1,13 +1,15 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 using TicketTVD.Services.CategoryAPI;
 using TicketTVD.Services.CategoryAPI.Data;
 using TicketTVD.Services.CategoryAPI.Extensions;
 using TicketTVD.Services.CategoryAPI.Services;
 using TicketTVD.Services.CategoryAPI.Services.IServices;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using System.Text.Json.Serialization;
+
+var CategoryCors = "CategoryCors";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 {
     option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddCors(p =>
+    p.AddPolicy(CategoryCors, build => { build.WithOrigins("*").AllowAnyMethod().AllowAnyHeader(); }));
+
 
 IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
 builder.Services.AddSingleton(mapper);
@@ -60,16 +66,20 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
+    if (!app.Environment.IsDevelopment())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "CATEGORY API");
-    });
-}
+        c.RoutePrefix = string.Empty;
+    }
+});
 
 app.UseHttpsRedirection();
+
+app.UseCors(CategoryCors);
 
 app.UseAuthentication();
 app.UseAuthorization();

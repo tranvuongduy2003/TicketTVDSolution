@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using TicketTVD.MessageBus;
 using TicketTVD.Services.AuthAPI.Models.Dto;
 using TicketTVD.Services.AuthAPI.Services.IServices;
 
@@ -11,12 +12,14 @@ namespace TicketTVD.Services.AuthAPI.Controllers
     public class AuthAPIController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IMessageBus _messageBus;
         private readonly IConfiguration _configuration;
         protected ResponseDto _response;
 
-        public AuthAPIController(IAuthService authService, IConfiguration configuration)
+        public AuthAPIController(IAuthService authService, IMessageBus messageBus, IConfiguration configuration)
         {
             _authService = authService;
+            _messageBus = messageBus;
             _configuration = configuration;
             _response = new();
         }
@@ -34,6 +37,9 @@ namespace TicketTVD.Services.AuthAPI.Controllers
                     _response.Message = errorMessage;
                     return BadRequest(_response);
                 }
+
+                await _messageBus.PublishMessage(model.Email,
+                    _configuration.GetValue<string>("TopicAndQueueNames:RegisterUserQueue"));
             }
             catch (Exception ex)
             {
@@ -69,31 +75,6 @@ namespace TicketTVD.Services.AuthAPI.Controllers
 
             return Ok(_response);
         }
-
-        // [HttpPost("assign-role")]
-        // [Authorize]
-        // [Authorize(Roles = "ADMIN")]
-        // public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequestDto model)
-        // {
-        //     try
-        //     {
-        //         var assignRoleSuccessful = await _authService.AssignRole(model);
-        //         if (!assignRoleSuccessful)
-        //         {
-        //             _response.IsSuccess = false;
-        //             _response.Message = "Something went wrong";
-        //             return BadRequest(_response);
-        //         }
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         _response.IsSuccess = false;
-        //         _response.Message = ex.Message.ToString();
-        //         return StatusCode(StatusCodes.Status500InternalServerError, _response);
-        //     }
-        //
-        //     return Ok(_response);
-        // }
 
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDto tokenRequestDto)

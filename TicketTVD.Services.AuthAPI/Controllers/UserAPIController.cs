@@ -70,7 +70,6 @@ namespace TicketTVD.Services.AuthAPI.Controllers
         }
 
         [Authorize]
-        [Authorize(Roles = "ADMIN")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto updateUserDto)
         {

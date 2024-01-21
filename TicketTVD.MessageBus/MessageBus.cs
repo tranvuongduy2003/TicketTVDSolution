@@ -7,7 +7,7 @@ namespace TicketTVD.MessageBus;
 public class MessageBus : IMessageBus
 {
 
-    private string connectionString = "Endpoint=sb://tickettvdweb.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=mONqXi/RXcS41WQ/bDSMEb0PqLEtnug75+ASbDzLnxs=";
+    private string connectionString = "Endpoint=sb://tickettvdwebsite.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=oXXeq1m0r51TsKTFhFTV7AJaW5UGREGgL+ASbFPXX14=";
 
     public async Task PublishMessage(object message, string topic_queue_Name)
     {
